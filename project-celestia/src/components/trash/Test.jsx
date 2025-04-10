@@ -2,7 +2,7 @@ import React from 'react'
 import CurvedScrollList from './components/CurvedScrollList'
 import CurvedScrollListTwo from './components/CurvedScrollListTwo';
 import CurvedScrollListThree from './components/CurvedScrollListThree';
-import CurvedScrollListModular from './components/modularity/CurvedScrollListModular';
+import CurvedScrollListModular from '../modularity/CurvedScrollListModular';
 
 function Test() {
 

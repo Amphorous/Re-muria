@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.26.2",
     "@reduxjs/toolkit": "^2.6.1",
     "@tailwindcss/vite": "^4.0.15",
     "axios": "^1.8.4",
     "babel-plugin-react-compiler": "^19.0.0-beta-aeaed83-20250323",
+    "dotenv": "^16.4.7",
     "framer-motion": "^12.6.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
