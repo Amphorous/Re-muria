@@ -6,9 +6,10 @@ function User() {
 
   return (
     <div className='flex w-full h-full items-center text-white justify-around'>
-        <div className="afacad-bold  mr-1 ml-[-5rem] h-full">
+        <div className="afacad-bold  mr-1  h-full">
+        <SignedIn>
             <div className=" rounded-2xl h-full flex items-center">
-                <SignedIn>
+                
                     <div className="flex flex-col  bg-gray-600/10 backdrop-blur-md ring-1 ring-gray-300/35 rounded-2xl">
                         <p className='p-5 text-7xl pr-[10rem] pl-[2rem]'>Instructions</p>
                         <div className="ring-1 mx-11 rounded-2xl mt-[-0.5rem] ring-amber-400"></div>
@@ -21,15 +22,17 @@ function User() {
                             <li>Instructions here</li>
                         </ol>
                     </div>
-                </SignedIn>
+                
             </div>
-            <SignedOut>
+        </SignedIn>
+        <SignedOut>
                     <div className="h-full flex justify-center items-center">
-                        <div className="  flex flex-col  bg-gray-600/10 backdrop-blur-md ring-1 ring-gray-300/35 rounded-2xl">
-                        <p className='p-5 text-8xl pr-[10rem] pl-[2rem] mb-1'>Sign In</p>
+                        <div className="  flex flex-col   ">
+                            <p className='p-5 text-[1500%]  mb-1'>Sign</p>
+                            <p className='p-5 text-[1500%] mt-[-12rem]  mb-1'>In</p>
                         </div>
                     </div>
-            </SignedOut>
+        </SignedOut>
         </div>
         <div className='ml-1 flex flex-col'>
             <Outlet/>
