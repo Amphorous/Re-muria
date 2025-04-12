@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Afacad:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Afacad:wght@500&display=swap');
 @import "tailwindcss";
 
 .afacad-bold {
@@ -7,6 +10,32 @@
   font-weight: 700;
   font-style: normal;
 }
+
+.afacad-semi-bold{
+  font-family: "Afacad", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.libre-baskerville-regular {
+  font-family: "Libre Baskerville", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.libre-baskerville-bold {
+  font-family: "Libre Baskerville", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.barcode-font {
+  font-family: "Libre Barcode 39", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
 
 body {
   

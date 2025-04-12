@@ -77,7 +77,7 @@ export default function CurvedScrollListModular({
 
   return (
     <div
-      className="h-screen w-screen flex items-start relative"
+      className="h-[95%] w-full flex items-start relative"
       style={{ paddingTop: `${startY}px`, paddingBottom: `${screenHeight - (startY + VIEWPORT_HEIGHT)}px` }}
     >
       <motion.div
