@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { GrSearch } from "react-icons/gr";
+import { useNavigate } from 'react-router-dom';
 import UserCard from './UserCard';
 
 function Home() {
@@ -16,16 +17,19 @@ function Home() {
     }
   });
 
+  const navigate = useNavigate();
+  const [cardBool, setCardBool] = useState(2);
   const [resBool1, setResBool1] = useState(1);
   const [cardInfo, setCardInfo] = useState();
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   function submitHandler(formObj) {
+    console.log("called")
     let uid = formObj.uid;
 
     setResBool1(0);
 
-    axios.get(`http://localhost:8080/user/dashboard/${uid}`)
+    axios.get(`http://localhost:8080/user/dashboard/noRefresh/${uid}`)
       .then((res) => {
         console.log("This is the response: ", res)
         setCardInfo(res.data);
@@ -36,6 +40,7 @@ function Home() {
           region: res.data.region,
           profilePictureLink: res.data.profilePictureLink
         }
+        setCardBool(1)
 
         setLocalUsers((prevUsers) => {
           const userExists = prevUsers.some(user => user.uid === userObjLS.uid);
@@ -60,8 +65,9 @@ function Home() {
         setResBool1(1);
       })
       .catch((err) => {
-        console.log("this is an error",err);
         setResBool1(1);
+        setCardInfo(undefined);
+        setCardBool(0);
       })
   }
 
@@ -102,7 +108,7 @@ function Home() {
               <GrSearch />
             </button>
           </> : <>
-            <button type="submit" className=' text-white rounded-3xl ring-[#E3E3E3] bg-[#B2B2B2]/42 p-2 m-2  text-[1rem] z-10
+            <button type="submit" className='cursor-pointer text-white rounded-3xl ring-[#E3E3E3] bg-[#B2B2B2]/42 p-2 m-2  text-[1rem] z-10
             hover:bg-white hover:text-black transition'>
               <GrSearch />
             </button>
@@ -117,7 +123,7 @@ function Home() {
 
         {[...localUsers].reverse().map((user, index, arr) => (
           <div key={user.uid} className='h-[12.5%] flex flex-col'>
-            <div className='flex mb-1.5 items-center justify-between '>
+            <div className='flex mb-1.5 items-center justify-between cursor-pointer' onClick={()=>{submitHandler({uid: user.uid})}}>
               <div className='flex namesarea'>
                 <img src={user.profilePictureLink} alt='pfp' className='w-[3.5rem] h-[3.5rem] rounded-[100%] mt-1' />
                 <div className="flex flex-col justify-center ml-3.5 ">
@@ -141,27 +147,47 @@ function Home() {
 
       </div>
       <div className="flex flex-col">
-        <p className="afacad-bold text-9xl text-white">
-          User
-        </p>
-        <p className="afacad-bold text-9xl text-white mt-[-1.5rem]">
-          Search
-        </p>
-        {(cardInfo !== undefined)?<>
-          <UserCard props = {cardInfo}/>
+        {(cardBool === 2)?<>
+          <div className="items-center flex flex-col ">
+            <p className="afacad-bold text-9xl text-white">
+              Welcome to
+            </p>
+            <p className="afacad-bold text-9xl text-white mt-[-1.5rem]">
+              Re<span className='text-amber-400'>:</span>muria
+            </p>
+          </div>
         </>:<>
-        //w:h is 21:10 please make sure
-          <div className=' text-black  w-[31.5rem] h-[15rem]'>
-
+          <p className="afacad-bold text-9xl text-white">
+            User
+          </p>
+          <p className="afacad-bold text-9xl text-white mt-[-1.5rem]">
+            Search
+          </p>
+        </>}
+        {(cardInfo !== undefined)?<>
+          <div onClick={()=>{navigate(`/dashboard/${cardInfo.uid}`)}} className='cursor-pointer'>
+            <UserCard props = {cardInfo}/>
+          </div>
+        </>:<>
+          {(cardBool === 0)?<>
+            <div className=' text-black  w-[31.5rem] h-[17rem]'>
               <div className="z-0 bg-cover bg-center h-full w-full rounded-md bg-gray-600/42">
                   <div className=" bg-gray-800/42 backdrop-blur-xs w-[31.5rem] h-[17rem] rounded-md absolute flex justify-end">
-                      {/* on startup have a bool at 2,  */}
                       <div className=" h-full w-[30rem] rounded-lg border-2 border-dashed  border-white/42">
-                          <div className="flex flex-col"></div>
+                          <div className="flex p-[2rem] h-full items-center">
+                            <img src="https://i.pinimg.com/originals/b2/56/74/b25674410a834c3dc7bae5ea0a7b08cb.jpg" className='rounded-[100%] w-[60px] h-[60px]' />
+                            <div className="flex flex-col text-white justify-center h-full">
+                              <p className="text-4xl libre-baskerville-bold ml-4 ">User not Found!</p>
+                              <p className="text-md text-[#B2B2B2] libre-baskerville-regular ml-4">
+                                Are you sure the UID is correct?
+                              </p>
+                            </div>
+                          </div>
                       </div>
                   </div>
               </div>
-          </div>
+            </div>
+          </>:<></>}
         </> }
       </div>
     </div>
