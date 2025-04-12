@@ -1,10 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Afacad:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Afacad:wght@500&display=swap');
 @import "tailwindcss";
 
 .afacad-bold {
   font-family: "Afacad", sans-serif;
   font-optical-sizing: auto;
   font-weight: 700;
+  font-style: normal;
+}
+
+.afacad-semi-bold{
+  font-family: "Afacad", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
   font-style: normal;
 }
 

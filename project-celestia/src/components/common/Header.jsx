@@ -1,7 +1,7 @@
 import { SignInButton, SignOutButton, SignedIn, SignedOut, UserButton, useUser } from '@clerk/clerk-react'
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import SignInComponent from './SignInComponent'
+import SignInComponent from './Validate'
 
 function Header() {
 
@@ -10,16 +10,18 @@ function Header() {
     useEffect(
         ()=>{
             console.log(user?.username)
-        }, [isLoaded]
+        }, [isSignedIn]
     )
 
   return (
     <div className=' w-full h-full'>
         <div className='bg-black w-full p-3 py-[2rem]'>
             <div className="bg-black flex justify-between">
-                <div className="flex">
-                    <p className='afacad-bold text-white text-[4rem] mt-[-1.6rem] ml-[0.7rem]'>Re<span className='text-amber-400'>:</span>muria</p>
-                </div>
+                <Link to='/'>
+                    <div className="flex">
+                        <p className='afacad-bold text-white text-[4rem] mt-[-1.6rem] ml-[0.7rem]'>Re<span className='text-amber-400'>:</span>muria</p>
+                    </div>
+                </Link>
 
                 <div className='text-white'>
                     <ul className='flex'>
@@ -27,6 +29,13 @@ function Header() {
                         <li className='p-1 m-1'>Leaderboards</li>
                         <li className='p-1 m-1'>Privacy</li>
                         <li className='p-1 m-1'>Settings</li>
+                        <SignedIn>
+                            <li className="p-1 m-1">
+                                    <Link to='user/validate'>
+                                        Validate
+                                    </Link>
+                            </li>
+                        </SignedIn>
                         <li className="p-1 m-1">
                             <div>
                                 <SignedIn>
@@ -41,7 +50,7 @@ function Header() {
                                 </SignedIn>
                                 <SignedOut>
 
-                                    <Link to='signin'>
+                                    <Link to='user' className='ring-2 rounded-[6px] px-3 py-1 ring-amber-400 bg-gradient-to-br from-gray-800 to-gray-950 hover:bg-gradient-to-tl from-gray-800 to-gray-950'>
                                         Sign In
                                     </Link>
                                 </SignedOut>

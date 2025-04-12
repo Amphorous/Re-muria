@@ -39,14 +39,14 @@ function RootLayout() {
         
 
         <div className='-z-10'>
-          <div className="absolute z-0  mt-[3.5rem] ml-[-15rem] w-[60rem] h-[60rem]" style={{
+          <div className="absolute z-0  mt-[1rem] ml-[-16.8rem] w-[60rem] h-[60rem]" style={{
               backgroundImage: `url('${bgig}')`,
               backgroundRepeat: 'no-repeat'
             }}>
           </div>
-          <div className="absolute mt-[8rem] bg-gradient-to-l from-black to-transparent h-full w-[32rem] ml-[13rem]"></div>
+          <div className="absolute mt-[8rem] bg-gradient-to-l from-black to-transparent h-full w-[31.1rem] ml-[12.1rem]"></div>
           <div className="absolute mt-0 w-[100%] bg-black h-[8rem]"></div>
-          <div className="absolute mt-[8rem] bg-gradient-to-b from-black to-transparent h-[24rem] w-full"></div>
+          <div className="absolute mt-[8rem] bg-gradient-to-b from-black via-transparent to-transparent h-[24rem] w-full"></div>
         </div>
         
         <div className="fixed w-full h-[90%] z-0">
