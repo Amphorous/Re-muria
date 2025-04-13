@@ -1,13 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { HiOutlineRefresh } from "react-icons/hi";
 import UserCard from './UserCard';
+import CharacterStrip from './CharacterStrip';
 
 function Dashboard() {
 
     const params = useParams()
     const uid = params.uid
+    const navigate = useNavigate()
     
 
     const [rankItems, setRankItems] = useState();
@@ -17,6 +19,7 @@ function Dashboard() {
     useEffect(()=>{
         axios.get(`http://localhost:8080/damage/rankings/${uid}`)
         .then((res)=>{
+            console.log(res.data)
             setRankItems(res.data);
         })
         .catch((err)=>{})
@@ -34,6 +37,11 @@ function Dashboard() {
         setResBool(0)
         axios.get(`http://localhost:8080/user/dashboard/${uid}`)
         .then((res)=>{
+            axios.get(`http://localhost:8080/damage/rankings/${uid}`)
+            .then((res1)=>{
+                setRankItems(res1.data);
+            })
+            .catch((err)=>{})
             setResBool(1)
             setCardInfo(res.data)
         })
@@ -88,7 +96,17 @@ function Dashboard() {
                 </div>
             </> }
         </div>
-        <div className='p-5 m-5'></div>
+        <div className=' flex w-full  justify-end'>
+            <div className="flex  justify-evenly w-[75%] mr-[2.5rem] min-w-[45rem]">
+                {rankItems && <>
+                    {[...rankItems].slice(0,5).map((rankItem)=>(
+                        <div key={rankItem.category+rankItem.buildName} className='flex w-[18%] ' onClick={()=>{navigate(`/builds/${uid}`)}}>
+                            <CharacterStrip rankItem={rankItem}/>
+                        </div>
+                    ))}
+                </>}
+            </div>
+        </div>
     </div>
   )
 }

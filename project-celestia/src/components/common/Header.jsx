@@ -1,17 +1,14 @@
 import { SignInButton, SignOutButton, SignedIn, SignedOut, UserButton, useUser } from '@clerk/clerk-react'
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import SignInComponent from './Validate'
 
 function Header() {
 
     const {isLoaded, isSignedIn, user} = useUser();
 
-    useEffect(
-        ()=>{
-            console.log(user?.username)
-        }, [isSignedIn]
-    )
+    const navigate = useNavigate();
+    const {uid} = useParams();
 
   return (
     <div className=' w-full h-full'>
@@ -25,10 +22,17 @@ function Header() {
 
                 <div className='text-white'>
                     <ul className='flex'>
-                        <li className='p-1 m-1'>Artifacts</li>
-                        <li className='p-1 m-1'>Leaderboards</li>
-                        <li className='p-1 m-1'>Privacy</li>
-                        <li className='p-1 m-1'>Settings</li>
+                        {uid && 
+                            <li className='p-1 m-1' onClick={()=>{navigate(`builds/${uid}`)}}>Builds</li>
+                        }
+                        {uid && 
+                            <li className='p-1 m-1' onClick={()=>{navigate(`artifacts/${uid}`)}}>Artifacts</li>
+                        }
+                        {uid && 
+                            <li className='p-1 m-1' onClick={()=>{navigate(`dashboard/${uid}`)}}>Dashboard</li>
+                        }
+                        <li className='p-1 m-1' onClick={()=>{navigate(`leaderboards`)}}>Leaderboards</li>
+                        <li className='p-1 m-1' onClick={()=>{navigate(`settings`)}}>Settings</li>
                         <SignedIn>
                             <li className="p-1 m-1">
                                     <Link to='user/validate'>

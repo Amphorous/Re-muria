@@ -46,6 +46,14 @@ const browserRouterObj = createBrowserRouter([
         element: <Coming />
       },
       {
+        path:"leaderboards",
+        element: <Coming />
+      },
+      {
+        path:"settings",
+        element: <Coming />
+      },
+      {
         path:"user",
         element: <User />,
         children: [
