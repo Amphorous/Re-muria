@@ -55,7 +55,7 @@ function Builds({uid}) {
   ];
 
   return (
-    <div className="flex justify-end items-end w-full h-full ">
+    <div className=" flex justify-end items-end w-full h-full ">
         <CurvedScrollListModular 
             items={songs}
             initialFocus={10}
