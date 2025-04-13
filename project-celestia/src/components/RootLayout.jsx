@@ -5,30 +5,7 @@ import { Outlet } from 'react-router-dom';
 import Header from './common/Header';
 
 function RootLayout() {
-  const songs = [
-    { title: 'Song A', artist: 'Artist Alpha' },
-    { title: 'Song B', artist: 'Artist Beta' },
-    { title: 'Song C', artist: 'Artist Gamma' },
-    { title: 'Song D', artist: 'Artist Delta' },
-    { title: 'Song E', artist: 'Artist Epsilon' },
-    { title: 'Song F', artist: 'Artist Zeta' },
-    { title: 'Song G', artist: 'Artist Eta' },
-    { title: 'Song H', artist: 'Artist Theta' },
-    { title: 'Song I', artist: 'Artist Iota' },
-    { title: 'Song J', artist: 'Artist Kappa' },
-    { title: 'Song K', artist: 'Artist Lambda' },
-    { title: 'Song L', artist: 'Artist Mu' },
-    { title: 'Song M', artist: 'Artist Nu' },
-    { title: 'Song N', artist: 'Artist Xi' },
-    { title: 'Song O', artist: 'Artist Omicron' },
-    { title: 'Song P', artist: 'Artist Pi' },
-    { title: 'Song Q', artist: 'Artist Rho' },
-    { title: 'Song R', artist: 'Artist Sigma' },
-    { title: 'Song S', artist: 'Artist Tau' },
-    { title: 'Song T', artist: 'Artist Upsilon' },
-    { title: 'Song U', artist: 'Artist Phi' },
-    { title: 'Song V', artist: 'Artist Chi' },
-  ];
+  
   return (
     <div className="bg-black h-screen relative overflow-hidden">
         <div className="z-20 w-screen h-[10%]">
