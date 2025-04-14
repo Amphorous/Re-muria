@@ -8,7 +8,7 @@ export default function ScrollItem({ item, index, itemY, padding, viewHeight, sc
 
   return (
     <motion.div
-      className="absolute left-0 w-96 h-28 rounded-xl p-6 text-white shadow-lg bg-gray-800 text-right cursor-pointer"
+      className=" absolute left-0 w-96 h-28 rounded-xl p-6 text-white shadow-lg bg-gray-800 text-right cursor-pointer"
       style={{
         top: itemY + padding,
         scale,
