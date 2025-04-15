@@ -82,10 +82,6 @@ function Home() {
     }
   }
 
-  function textTrunc(text, max){
-    return text.length > max ? text.slice(0, max) + '...' : text;
-  }
-
   return (
     <div className='p-5 flex justify-around h-full w-full items-center'>
       <div className="p-5 w-[25%] h-full flex flex-col items-center justify-center">
@@ -139,7 +135,7 @@ function Home() {
                       {user.signature}
                     </p>
                   </div>
-                  
+
                 </div>
 
                 <div className='regionbox justify-self-end w-[2.5rem] text-center'>
