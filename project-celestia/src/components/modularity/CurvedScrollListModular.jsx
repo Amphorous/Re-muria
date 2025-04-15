@@ -17,6 +17,7 @@ export default function CurvedScrollListModular({
   springStiffness = 300,
   springDamping = 30
 }) {
+
   const containerRef = useRef(null);
   const scrollY = useMotionValue(0);
   const velocity = useRef(0);
@@ -48,6 +49,18 @@ export default function CurvedScrollListModular({
       }
     });
   };
+
+  useEffect(() => {
+    if (items.length > 0) {
+      const index = initialFocus % items.length;
+      setRawIndex(index);
+      setFocusedIndex(index);
+      if (containerRef.current) {
+        containerRef.current.scrollTop = index * ITEM_HEIGHT;
+        scrollY.set(index * ITEM_HEIGHT);
+      }
+    }
+  }, [items]);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -127,8 +140,8 @@ export default function CurvedScrollListModular({
         </div>
       </motion.div>
 
-      {focusedIndex !== null && (
-        <div>
+      {(focusedIndex !== NaN && items[focusedIndex] !== undefined) && (
+        <div className='bg-amber-200 ' onClick={()=>{console.log(focusedIndex)}}>
           <FocusedItemDisplay item={items[focusedIndex]} onNext={handleNext} />
         </div>
       )}
