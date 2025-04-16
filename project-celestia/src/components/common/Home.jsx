@@ -82,10 +82,6 @@ function Home() {
     }
   }
 
-  function textTrunc(text, max){
-    return text.length > max ? text.slice(0, max) + '...' : text;
-  }
-
   return (
     <div className='p-5 flex justify-around h-full w-full items-center'>
       <div className="p-5 w-[25%] h-full flex flex-col items-center justify-center">
@@ -121,27 +117,37 @@ function Home() {
           border border-[#B2B2B2] 
         ">
 
-        {[...localUsers].reverse().map((user, index, arr) => (
-          <div key={user.uid} className='h-[12.5%] flex flex-col'>
-            <div className='flex mb-1.5 items-center justify-between cursor-pointer' onClick={()=>{submitHandler({uid: user.uid})}}>
-              <div className='flex namesarea'>
-                <img src={user.profilePictureLink} alt='pfp' className='w-[3.5rem] h-[3.5rem] rounded-[100%] mt-1' />
-                <div className="flex flex-col justify-center ml-3.5 ">
-                  <p className="afacad-semi-bold text-white text-[190%]">{textTrunc(user.nickname, 12)}</p>
-                  <p className="afacad-semi-bold text-[#ebebeb] text-[80%] mt-[-0.5rem]">{textTrunc(user.signature, 35)}</p>
+          {[...localUsers].reverse().map((user, index, arr) => (
+            <div key={user.uid} className='h-[12.5%] flex flex-col'>
+              <div className='flex mb-1.5 items-center justify-between cursor-pointer' onClick={() => { submitHandler({ uid: user.uid }) }}>
+
+                <div className='flex namesarea max-w-[14rem] w-full overflow-hidden'>
+                  <img src={user.profilePictureLink} alt='pfp' className='w-[3.5rem] h-[3.5rem] rounded-[100%] mt-1' />
+                  
+                  <div className="flex flex-col justify-center ml-3.5 max-w-[10rem] w-full overflow-hidden">
+                    <p className="afacad-semi-bold text-white text-[190%] truncate">{user.nickname}</p>
+
+                    <p
+                      title={user.signature}
+                      className="afacad-semi-bold text-[#ebebeb] text-[80%] mt-[-0.5rem]
+                        truncate whitespace-nowrap overflow-hidden text-ellipsis"
+                    >
+                      {user.signature}
+                    </p>
+                  </div>
+
+                </div>
+
+                <div className='regionbox justify-self-end w-[2.5rem] text-center'>
+                  {regionRenderer(user.region)}
                 </div>
               </div>
-              <div className='regionbox justify-self-end w-[2.5rem] text-center'>
-                {regionRenderer(user.region)}
-              </div>
+
+              {index !== arr.length - 1 && (
+                <div className="border-b-[1px] rounded-2xl border-[#B2B2B2]"></div>
+              )}
             </div>
-
-            {index !== arr.length - 1 && (
-              <div className="border-b-[1px] rounded-2xl border-[#B2B2B2]"></div>
-            )}
-          </div>
-        ))}
-
+          ))}
 
         </div>
 

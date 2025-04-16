@@ -33,7 +33,14 @@ function CharacterStrip({rankItem}) {
     return firstPart.charAt(0).toUpperCase()+firstPart.slice(1)
   }
 
+  function buildNameGetter(text){
+    const parts = text.split('|:AVATAR_ID:|=')
+    return parts[0]
+  }
 
+  function textTrunc(text, max){
+    return text.length > max ? text.slice(0, max) : text;
+  }
   
   function returnTextOverlay(){
     return(
@@ -44,7 +51,7 @@ function CharacterStrip({rankItem}) {
         </div>
         <div className='text overlay ml-[-0.5rem]'>
           <div className="flex  ">
-            <p className="afacad-bold text-9xl vertical-text">{nameGetter()}</p>
+            <p className="afacad-bold text-9xl vertical-text">{(rankItem.buildName === null)?<>{nameGetter()}</>:<>{textTrunc(buildNameGetter(rankItem.buildName), 10)}</>}</p>
             <div className=" flex flex-col justify-end ml-[-1rem]">
               <p className='barcode-font text-4xl vertical-text'>{nameGetter()}</p>
             </div>
