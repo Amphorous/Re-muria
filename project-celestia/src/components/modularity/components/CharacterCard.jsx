@@ -1,7 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import deHashStats from '../../../assets/deHashStats.json'
+import axios from 'axios'
 
 function CharacterCard({item}) {
+
+    useEffect(() => {
+        localBuildData=sessionStorage.getItem("localBuildData")
+        if(localBuildData){
+            axios
+          .post('http://localhost:8080/build/getBuild', {
+            uid: `${item.uid}`,
+            avatarId: `${item.avatarId}`,
+            buildName: `${buildNameGetter(item.buildName)}`,
+          })
+          .then((res) => {
+            console.log('this is the data', res.data);
+          })
+          .catch((err) => {
+            console.error('Error fetching build:', err);
+          });
+        }
+
+
+        
+      }, []);
+      
+    function buildNameGetter(buildName){
+        if(buildName === null)
+            return null
+        return buildName.split('|:AVATAR_ID:|=')[0]
+    }
+
     console.log("This is item ",item)
     console.log("le dehash ", deHashStats[3046])
     function nameCardLink(sideIcon) {
