@@ -13,9 +13,13 @@ function Builds() {
   const [resBool, setResBool] = useState(1);
 
   useEffect(()=>{
-    axios.get(`http://localhost:8080/damage/rankings/${uid}`)
+    axios.get(`http://localhost:8080/damage/rankings/allBuilds/${uid}`)
     .then((res)=>{
         console.log("this is rankitems: ",res.data)
+        if(res.data.length === 0){
+          setResBool(0)
+        }
+        //need to add another endp which gets un built chars
         setRankItems(res.data);
     })
     .catch((err)=>{})
@@ -24,7 +28,7 @@ function Builds() {
   function newBuilds(){
     axios.get(`http://localhost:8080/user/${uid}`)
     .then((res1)=>{
-      axios.get(`http://localhost:8080/damage/rankings/${uid}`)
+      axios.get(`http://localhost:8080/damage/rankings/allBuilds/${uid}`)
       .then((res)=>{
           console.log(res.data)
           setRankItems(res.data);
@@ -40,7 +44,9 @@ function Builds() {
   
 
   return (
-    <div className=" flex justify-end items-end w-full h-full ">
+    <div>
+      {(resBool === 1)?<>
+      <div className=" flex justify-end items-end w-full h-full ">
         <CurvedScrollListModular 
             items={rankItems}
             scrollMidpoint={0.45}   
@@ -54,6 +60,10 @@ function Builds() {
         />
         <p className="text-white afacad-bold absolute">hi</p>
       </div>
+    </>:<>
+      <div className="w-full h-full afacad-bold text-9xl text-white flex items-center justify-center absolute backdrop-blur-xs">User builds are probably <br /> private...</div>
+    </>}
+    </div>
   )
 }
 

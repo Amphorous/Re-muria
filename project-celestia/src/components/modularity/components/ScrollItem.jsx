@@ -1,15 +1,21 @@
 // components/ScrollItem.jsx
 import { motion, useTransform } from 'framer-motion';
+import locJSON from '../../../assets/loc.json';
+import { useEffect, useState } from 'react';
 
 export default function ScrollItem({ item, index, itemY, padding, viewHeight, scrollY, rawIndex, itemHeight, onClick }) {
   const offset = useTransform(scrollY, (v) => (itemY + padding - v - viewHeight / 2 + itemHeight / 2) / itemHeight);
   const scale = useTransform(offset, (o) => 1 - Math.min(Math.abs(o) * 0.1, 0.4));
   const opacity = useTransform(offset, (o) => 1 - Math.min(Math.abs(o) * 0.3, 0.7));
 
-  function nameGetter(){
-    let category = item.category
-    let firstPart = category.split(':')[0].toLowerCase()
-    return firstPart.charAt(0).toUpperCase()+firstPart.slice(1)
+  const [isHovered, setIsHovered] = useState(false);
+  const finalOpacity = useTransform(opacity, (v) =>
+    isHovered ? 1 : v
+  );
+
+  function nameGetter(nameHash){
+
+    return locJSON["en"][nameHash]
   }
 
   function buildNameGetter(text){
@@ -76,6 +82,15 @@ export default function ScrollItem({ item, index, itemY, padding, viewHeight, sc
     return `https://enka.network/ui/UI_NameCardPic_${name}_P.png`;
   }
   
+  const [bgLoaded, setBgLoaded] = useState(true);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = nameCardLink(item.sideIcon);
+
+    img.onload = () => setBgLoaded(true);
+    img.onerror = () => setBgLoaded(false);
+  }, [item.sideIcon]);
 
   return (
     <motion.div
@@ -83,20 +98,21 @@ export default function ScrollItem({ item, index, itemY, padding, viewHeight, sc
   style={{
     top: itemY + padding,
     scale,
-    opacity,
+    opacity: finalOpacity,
     zIndex: 100 - Math.abs(index - rawIndex),
   }}
+  onHoverStart={() => setIsHovered(true)}
+  onHoverEnd={() => setIsHovered(false)}
+  transition={{ duration: 0.4, ease: "easeOut" }}
   onClick={() => onClick(index)}
 >
-  {/* Background image layer */}
-  <div
-    className="absolute inset-0 z-0 bg-cover bg-center scale-110"
-    style={{
-      backgroundImage: `url(${nameCardLink(item.sideIcon)})`,
-      filter: 'blur(1.3px)'
-    }}
-  />
-
+    <div
+        className={`absolute inset-0 z-0 bg-cover bg-center scale-110 ${!bgLoaded ? 'bg-gray-400' : ''}`}
+        style={{
+          backgroundImage: bgLoaded ? `url(${nameCardLink(item.sideIcon)})` : 'none',
+          filter: bgLoaded ? 'blur(1.3px)' : 'none',
+        }}
+      />
   
   {/* Foreground content layer */}
   <div className='relative z-10 w-full h-full flex justify-end   rounded-xl'>
@@ -108,9 +124,11 @@ export default function ScrollItem({ item, index, itemY, padding, viewHeight, sc
         <div className="flex justify-end">
           <div className="flex-col flex  p-1 rounded-md">
             <div className="text-2xl libre-baskerville-bold truncate whitespace-nowrap overflow-hidden text-ellipsis">
-              {(item.buildName) ? (buildNameGetter(item.buildName)) : (nameGetter())}
+              {(item.buildName) ? (buildNameGetter(item.buildName)) : (nameGetter(item.nameTextMapHash))}
             </div>
-            <div className="text-md text-white/95">Top {(item.categoryRankPercentage).toFixed(2)}%</div>
+            {
+              (item.totalUnits !== null) && <div className="text-md text-white/95">Top {(item.categoryRankPercentage).toFixed(2)}%</div>
+            }
           </div>
         </div>
         <div className="flex justify-end mt-1 mb-1 afacad-light">
