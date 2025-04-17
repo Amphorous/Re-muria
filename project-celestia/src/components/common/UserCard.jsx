@@ -68,8 +68,8 @@ function UserCard(props) {
                         <div className="flex p-5">
                             <img src={cardInfo.profilePictureLink} className='rounded-[100%] w-[100px] h-[100px] bg-gray-500/35 backdrop-blur-xs' />
                             <div className="flex flex-col justify-center mt-2.5 ml-4">
-                                <p className="text-6xl libre-baskerville-bold text-white">
-                                    {textTrunc(cardInfo.nickname, 6)}
+                                <p className="text-6xl libre-baskerville-bold text-white truncate overflow-ellipsis  max-w-[21rem]">
+                                    {cardInfo.nickname}
                                 </p>
                                 <p className="text-md libre-baskerville-regular text-[#e4e4e4] ">
                                     {textTrunc(cardInfo.signature, 30)}
