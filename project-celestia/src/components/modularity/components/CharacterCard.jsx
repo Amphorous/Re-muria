@@ -4,6 +4,8 @@ import {FastAverageColor} from 'fast-average-color';
 import tinycolor from 'tinycolor2';
 import axios from 'axios'
 import weaponDictionary from '../../../assets/loc.json'
+import locJSON from '../../../assets/loc.json'
+import loading from '../../../assets/loading.gif'
 
 import ATK from '../../../assets/icons/ATK.png';
 import HP from '../../../assets/icons/HP.png';
@@ -29,19 +31,29 @@ import STAR from '../../../assets/icons/WARERAWA.png'
 
 function CharacterCard({item}) {
 
-  const [shades, setShades] = useState(0);
+  const [shades, setShades] = useState({
+    ligma:     "#E0E0E0",  
+    light:     "#CCCCCC",
+    lighter:   "#B2B2B2",
+    abitdark:  "#999999",
+    darker:    "#7F7F7F",
+    dark:      "#666666"   
+  });
+  const [gachaImageLoaded, setGachaImageLoaded] = useState(false);
   const [cardMap, setCardMap] = useState({"0":{"test":"test"}});
   const [currentCardInfo, setCurrentCardInfo] = useState(null);
   const [iconsAsset, setIconsAsset] = useState({"0":{"test":"test"}});
   const [currentIconAsset, setCurrentIconAsset] = useState(null);
 
   useEffect(() => {
+    setGachaImageLoaded(false);
     const img = new Image();
     img.crossOrigin = 'anonymous'; // very important for CORS
     img.src = item.gachaIcon;
   
     img.onload = async () => {
       try {
+        setGachaImageLoaded(true);
         const fac = new FastAverageColor();
         const color = await fac.getColorAsync(img, { mode: 'speed' });
         const base = tinycolor(color.hex);
@@ -63,10 +75,6 @@ function CharacterCard({item}) {
       console.error('Image failed to load:', e);
     };
   }, [item.gachaIcon]);
-
-  function avatarIdOrBuildName(avatarId, buildName){
-    return (buildName === null)?(`${avatarId}`):(buildName);
-  }
 
   useEffect(() => {
     setCurrentCardInfo(null)
@@ -123,6 +131,9 @@ function CharacterCard({item}) {
  
   }, [item.avatarId])
   
+  function avatarIdOrBuildName(avatarId, buildName){
+    return (buildName === null)?(`${avatarId}`):(buildName);
+  }
    
     function buildNameGetter(buildName){
         if(buildName === null)
@@ -134,9 +145,9 @@ function CharacterCard({item}) {
       return text.length > max ? text.slice(0, max) : text;
     }
 
-    function nameGetter(text){
-      let firstPart = text.split(':')[0].toLowerCase()
-      return firstPart.charAt(0).toUpperCase()+firstPart.slice(1)
+    function nameGetter(nameHash){
+
+      return locJSON["en"][nameHash]
     }
 
     function weaponIconGetter(weapon){
@@ -235,23 +246,52 @@ function CharacterCard({item}) {
     function refineGetter(obj) {
       return ((Object.values(obj)[0])+1);
     }
-    
 
+    function statGetter(base = 0, flat = 0, percent = 0){
+      return (base + (base*percent) + flat).toFixed()
+    }
+
+    function artifactFlowerImageGetter(setNameKey, artifactArray){
+      let intermediatePart = ""
+      for(let i = 0; i < artifactArray.length; i++){
+        if(setNameKey === artifactArray[i].flat.setNameTextMapHash){
+          intermediatePart = artifactArray[i].flat.icon.split("_")[2]
+          return "https://enka.network/ui/UI_RelicIcon_"+intermediatePart+"_4.png";
+        }
+      }
+    }
+ 
   return (
-    <div className='w-full h-full flex rounded-3xl relative overflow-hidden ring-[2px] ring-[#B2B2B2]/20' style={{
+
+    // <Tilt perspective={1000000} tiltReverse={true} className=''>
+      <div className='w-full h-[80%] flex rounded-3xl relative overflow-hidden ring-[2px] ring-[#B2B2B2]/20 ' style={{
       //i want the fade to go from left to right shades.lighter to shades.darker
       background: `linear-gradient(to right, ${shades.light}, ${shades.lighter}, ${shades.darker}, ${shades.dark})`
     }}>
-        <div
-            className='w-full h-full flex items-center  ml-[-40%] rounded-3xl '>
-                <img style={{
-            objectFit: 'cover',
-            width: '100%',
-            height: '100%',
-            }} src={item.gachaIcon} className='' />
+        <div className='gachaImageDiv w-full h-full flex items-center  ml-[-40%] rounded-3xl '>
+            {(gachaImageLoaded)?<></>:<>
+                <div className="w-full h-full flex justify-center items-center z-10 absolute ">
+                    <img src={loading} alt="" className='w-[192px] h-[108px]'/>
+                </div>
+            </>}
+            
+            <img
+                style={{
+                    objectFit: 'cover',
+                    width: '100%',
+                    height: '100%',
+                }}
+                src={item.gachaIcon}
+                className='thisisthegachaicondiv'
+                onLoad={() => setGachaImageLoaded(true)}
+                onError={(e) => {
+                    console.error("Failed to load gachaIcon:", e);
+                    setGachaImageLoaded(true); 
+                }}
+            />
         </div>
         <div className="absolute flex justify-end rounded-3xl  w-full h-full ">
-            <div className=' rounded-3xl w-[80%] backdrop-blur-xl border-l-[0.5px] border-[#B2B2B2]/39 rounded-l-4xl flex'>
+            <div className=' rounded-3xl w-[80%] backdrop-blur-xl border-l-[0.5px] border-[#B2B2B2]/39 rounded-l-4xl flex '>
               {
                 (currentCardInfo === null)?<>
                   <div className="w-full h-full flex justify-center items-center">
@@ -266,7 +306,7 @@ function CharacterCard({item}) {
                       </div>
                       <div className="flex">
                         <p className=" afacad-bold text-white text-5xl">
-                          {(item.buildName === null)?<>{nameGetter(item.category)}</>:<>{textTrunc(buildNameGetter(item.buildName), 12)}</>}
+                          {(item.buildName === null)?<>{nameGetter(item.nameTextMapHash)}</>:<>{textTrunc(buildNameGetter(item.buildName), 12)}</>}
                         </p>
                       </div>
                       <div className="flex ">
@@ -283,7 +323,7 @@ function CharacterCard({item}) {
                               className='bg-black/42 rounded-full p-1 m-1 w-[60px] h-[60px]'/>
                               {
                                 ((currentCardInfo.constLevel > index)?<>
-                                  <div className="absolute rounded-full p-1 m-1 w-[60px] h-[60px] inthisdivrighthere"
+                                  <div className="absolute rounded-full p-1 m-1 w-[60px] h-[60px] "
                                     style={{ boxShadow: `0 0 0 2px ${shades.ligma}` }}
                                   ></div>
                                 </>:<>
@@ -298,8 +338,8 @@ function CharacterCard({item}) {
 
                   </div>
 
-                  <div className="flex h-full wepAndStats">
-                        <div className="flex flex-col">
+                  <div className="flex  wepAndStats ">
+                        <div className="flex flex-col wepstatscontainer ">
                           <div className="p-2 mt-5 rounded-3xl weaponBox flex "
                            style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'}}>
                             <div className='p-2 flex items-center mb-3'>
@@ -311,7 +351,7 @@ function CharacterCard({item}) {
                               </div>
                             </div>
                             <div className="flex flex-col p-2">
-                              <p className="afacad-semi-bold text-2xl max-w-[10rem] text-left">{weaponDictionary["en"][`${currentCardInfo.weaponId}`]}</p>
+                              <p className="afacad-semi-bold text-2xl max-w-[10rem] text-left leading-5 mb-3">{weaponDictionary["en"][`${currentCardInfo.weaponId}`]}</p>
                               <div className="flex ">
                                 <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
                                   <img src={statToIconGetter(currentCardInfo.weapon.weaponStats[0].appendPropId)} alt="" className='w-[20px] h-[20px]'/>
@@ -333,7 +373,229 @@ function CharacterCard({item}) {
                               </div>
                             </div>
                           </div>
-                          <div className="statsBox"></div>
+                          <div className="p-5 mt-5 rounded-3xl statsBox flex flex-col h-full " 
+                          style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'}}>
+
+                              <div className="flex justify-between HP mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={HP} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> HP</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {statGetter(currentCardInfo.preBattleStats[1], currentCardInfo.preBattleStats[2], currentCardInfo.preBattleStats[3])}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="flex justify-between ATK mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={ATK} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> ATK</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {statGetter(currentCardInfo.preBattleStats[4], currentCardInfo.preBattleStats[5], currentCardInfo.preBattleStats[6])}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="flex justify-between DEF mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={DEF} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> DEF</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {statGetter(currentCardInfo.preBattleStats[7], currentCardInfo.preBattleStats[8], currentCardInfo.preBattleStats[9])}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {(currentCardInfo.preBattleStats[28] !== 0) && 
+                              <div className="flex justify-between EM mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={EM} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Elemental Mastery</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {currentCardInfo.preBattleStats[28].toFixed()}
+                                  </p>
+                                </div>
+                              </div>}
+
+                              <div className="flex justify-between ER mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={ER} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Energy Recharge</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[23]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="flex justify-between CR mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={CR} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Crit Rate</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[20]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="flex justify-between CD mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={CD} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Crit Damage</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[22]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>
+
+                              {(currentCardInfo.preBattleStats[26]*100 > 13) && 
+                              <div className="flex justify-between HEAL mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={HEAL} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Healing Bonus</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[26]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>}
+                              
+                              {(currentCardInfo.preBattleStats[30]*100 > 13) && 
+                              <div className="flex justify-between PHYS mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={PHYS} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Physical DMG Bonus</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[30]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>}
+
+                              {(currentCardInfo.preBattleStats[40]*100 > 13) && 
+                              <div className="flex justify-between PYRO mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={PYRO} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Pyro DMG Bonus</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[40]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>}
+
+                              {(currentCardInfo.preBattleStats[41]*100 > 13) && 
+                              <div className="flex justify-between ELECTRO mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={ELECTRO} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Electro DMG Bonus</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[41]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>}
+
+                              {(currentCardInfo.preBattleStats[42]*100 > 13) && 
+                              <div className="flex justify-between HYDRO mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={HYDRO} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Hydro DMG Bonus</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[42]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>}
+
+                              {(currentCardInfo.preBattleStats[43]*100 > 13) && 
+                              <div className="flex justify-between DENDRO mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={DENDRO} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Dendro DMG Bonus</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[43]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>}
+
+                              {(currentCardInfo.preBattleStats[44]*100 > 13) && 
+                              <div className="flex justify-between ANEMO mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={ANEMO} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Anemo DMG Bonus</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[44]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>}
+
+                              {(currentCardInfo.preBattleStats[45]*100 > 13) && 
+                              <div className="flex justify-between GEO mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={GEO} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Geo DMG Bonus</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[45]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>}
+
+                              {(currentCardInfo.preBattleStats[46]*100 > 13) && 
+                              <div className="flex justify-between CRYO mb-0.5">
+                                <div className="flex items-center">
+                                  <img src={CRYO} className='w-[25px] h-[25px]' />
+                                  <p className="text-white afacad-light ml-1"> Cryo DMG Bonus</p>
+                                </div>
+                                <div>
+                                  <p className="text-white afacad-bold">
+                                    {(currentCardInfo.preBattleStats[46]*100).toFixed(1)}%
+                                  </p>
+                                </div>
+                              </div>}
+
+                              <div className='mt-3'>
+                              {Object.entries(currentCardInfo.currentSetEffects).map(([key, value], index) => (
+                                <div key={index}>
+                                  {(value > 1) && <div className='flex justify-between items-center '>
+
+                                    <div className="flex items-center text-left max-w-[12rem]">
+                                      <img src={artifactFlowerImageGetter(key, currentCardInfo.artifactList)} className='w-[30px] h-[30px]' />
+                                      <p className="text-amber-400 afacad-light ml-1 leading-tight"> {locJSON["en"][key]}</p>
+                                    </div>
+
+                                    <p className="text-amber-400 afacad-bold">x{value-(value%2)}</p>
+
+                                  </div>}
+                                </div>
+                              ))}
+                            </div>
+
+                          </div>
                         </div>
                   </div>
                   
@@ -341,7 +603,8 @@ function CharacterCard({item}) {
               }
             </div>
         </div>
-  </div>
+    </div>
+    // </Tilt>
 
   )
 }
