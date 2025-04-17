@@ -141,7 +141,7 @@ export default function CurvedScrollListModular({
       </motion.div>
 
       {(focusedIndex !== NaN && items[focusedIndex] !== undefined) && (
-        <div className='bg-amber-200 ' onClick={()=>{console.log(focusedIndex)}}>
+        <div>
           <FocusedItemDisplay item={items[focusedIndex]} onNext={handleNext} />
         </div>
       )}
