@@ -264,7 +264,7 @@ function CharacterCard({item}) {
   return (
 
     // <Tilt perspective={1000000} tiltReverse={true} className=''>
-      <div className='w-full h-[80%] flex rounded-3xl relative overflow-hidden ring-[2px] ring-[#B2B2B2]/20 ' style={{
+      <div className='w-full h-[85%] flex rounded-3xl relative overflow-hidden ring-[2px] ring-[#B2B2B2]/20 ' style={{
       //i want the fade to go from left to right shades.lighter to shades.darker
       background: `linear-gradient(to right, ${shades.light}, ${shades.lighter}, ${shades.darker}, ${shades.dark})`
     }}>
@@ -357,16 +357,16 @@ function CharacterCard({item}) {
                                   <img src={statToIconGetter(currentCardInfo.weapon.weaponStats[0].appendPropId)} alt="" className='w-[20px] h-[20px]'/>
                                   <p>{currentCardInfo.weapon.weaponStats[0].statValue}</p>
                                 </div>
-                                <div className=" rounded-3xl text-white px-2 afacad-light flex items-center ml-1" style={{backgroundColor: shades.abitdark}}>
+                                {(currentCardInfo.weapon.weaponStats[1] !== undefined) && <div className=" rounded-3xl text-white px-2 afacad-light flex items-center ml-1" style={{backgroundColor: shades.abitdark}}>
                                   <img src={statToIconGetter(currentCardInfo.weapon.weaponStats[1].appendPropId)} alt="" className='w-[20px] h-[20px]'/>
                                   <p>{currentCardInfo.weapon.weaponStats[1].statValue} 
                                   {(currentCardInfo.weapon.weaponStats[1].appendPropId !== "FIGHT_PROP_ELEMENT_MASTERY") && (`%`)} </p>
-                                </div>
+                                </div>}
                               </div>
                               <div className="flex mt-1">
-                                <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.dark}}>
+                                {(currentCardInfo.weaponInfo.affixMap !== null) && <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.dark}}>
                                   <p>R{refineGetter(currentCardInfo.weaponInfo.affixMap)}</p>
-                                </div>
+                                </div>}
                                 <div className=" rounded-3xl text-white px-2 afacad-light flex items-center ml-1" style={{backgroundColor: shades.dark}}>
                                   <p>Lv. {currentCardInfo.weaponInfo.level}/90</p>
                                 </div>
