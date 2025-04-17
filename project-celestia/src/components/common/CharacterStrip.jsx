@@ -51,7 +51,7 @@ function CharacterStrip({rankItem}) {
         </div>
         <div className='text overlay ml-[-0.5rem]'>
           <div className="flex  ">
-            <p className="afacad-bold text-9xl vertical-text">{(rankItem.buildName === null)?<>{nameGetter()}</>:<>{textTrunc(buildNameGetter(rankItem.buildName), 10)}</>}</p>
+            <p className="afacad-bold text-9xl vertical-text">{(rankItem.buildName === null)?<>{nameGetter()}</>:<>{textTrunc(buildNameGetter(rankItem.buildName), 11)}</>}</p>
             <div className=" flex flex-col justify-end ml-[-1rem]">
               <p className='barcode-font text-4xl vertical-text'>{nameGetter()}</p>
             </div>
