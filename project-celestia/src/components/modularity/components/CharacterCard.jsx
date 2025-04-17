@@ -6,7 +6,6 @@ import axios from 'axios'
 import weaponDictionary from '../../../assets/loc.json'
 import locJSON from '../../../assets/loc.json'
 import loading from '../../../assets/loading.gif'
-import Tilt from 'react-parallax-tilt'
 
 import ATK from '../../../assets/icons/ATK.png';
 import HP from '../../../assets/icons/HP.png';
@@ -265,7 +264,7 @@ function CharacterCard({item}) {
   return (
 
     // <Tilt perspective={1000000} tiltReverse={true} className=''>
-      <div className='w-full h-full flex rounded-3xl relative overflow-hidden ring-[2px] ring-[#B2B2B2]/20 ' style={{
+      <div className='w-full h-[80%] flex rounded-3xl relative overflow-hidden ring-[2px] ring-[#B2B2B2]/20 ' style={{
       //i want the fade to go from left to right shades.lighter to shades.darker
       background: `linear-gradient(to right, ${shades.light}, ${shades.lighter}, ${shades.darker}, ${shades.dark})`
     }}>
