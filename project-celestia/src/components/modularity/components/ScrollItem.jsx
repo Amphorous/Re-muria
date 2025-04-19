@@ -76,6 +76,10 @@ export default function ScrollItem({ item, index, itemY, padding, viewHeight, sc
     }
   }
 
+  function textTrunc(text, max){
+    return text.length > max ? text.slice(0, max) : text;
+  }
+
   function nameCardLink(sideIcon) {
     const parts1 = sideIcon.split('_');
     const name = parts1.at(-1).split('.')[0];
@@ -123,8 +127,8 @@ export default function ScrollItem({ item, index, itemY, padding, viewHeight, sc
       <div className="flex flex-col -ml-1 w-[70%]">
         <div className="flex justify-end">
           <div className="flex-col flex  p-1 rounded-md">
-            <div className="text-2xl libre-baskerville-bold truncate whitespace-nowrap overflow-hidden text-ellipsis">
-              {(item.buildName) ? (buildNameGetter(item.buildName)) : (nameGetter(item.nameTextMapHash))}
+            <div className="text-2xl libre-baskerville-bold max-h-[4rem] max-w-[13rem]">
+              {(item.buildName) ? (textTrunc(buildNameGetter(item.buildName), 18)) : (textTrunc(nameGetter(item.nameTextMapHash), 18))}
             </div>
             {
               (item.totalUnits !== null) && <div className="text-md text-white/95">Top {(item.categoryRankPercentage).toFixed(2)}%</div>

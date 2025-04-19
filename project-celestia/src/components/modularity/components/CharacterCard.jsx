@@ -7,6 +7,9 @@ import weaponDictionary from '../../../assets/loc.json'
 import locJSON from '../../../assets/loc.json'
 import loading from '../../../assets/loading.gif'
 
+import 'simplebar-react/dist/simplebar.min.css';
+import SimpleBar from 'simplebar-react';
+
 import ATK from '../../../assets/icons/ATK.png';
 import HP from '../../../assets/icons/HP.png';
 import DEF from '../../../assets/icons/DEF.png';
@@ -26,12 +29,19 @@ import ANEMO from '../../../assets/icons/ANEMO.png';
 import CRYO from '../../../assets/icons/CRYO.png';
 import GEO from '../../../assets/icons/GEO.png';
 import DENDRO from '../../../assets/icons/DENDRO.png';
-import STAR from '../../../assets/icons/WARERAWA.png'
+import STAR from '../../../assets/icons/WARERAWA.png';
+
+import FE from '../../../assets/icons/FE.webp';
+import FL from '../../../assets/icons/FL.webp';
+import SA from '../../../assets/icons/SA.webp';
+import GO from '../../../assets/icons/GO.webp';
+import CI from '../../../assets/icons/CI.webp';
 
 
 function CharacterCard({item}) {
 
   const [shades, setShades] = useState({
+    GRAY:      "#B2B2B2",
     ligma:     "#E0E0E0",  
     light:     "#CCCCCC",
     lighter:   "#B2B2B2",
@@ -44,6 +54,10 @@ function CharacterCard({item}) {
   const [currentCardInfo, setCurrentCardInfo] = useState(null);
   const [iconsAsset, setIconsAsset] = useState({"0":{"test":"test"}});
   const [currentIconAsset, setCurrentIconAsset] = useState(null);
+
+  useEffect(()=>{
+    console.log(item.category)
+  }, [item.buildName, item.avatarId])
 
   useEffect(() => {
     setGachaImageLoaded(false);
@@ -131,9 +145,9 @@ function CharacterCard({item}) {
  
   }, [item.avatarId])
   
-  function avatarIdOrBuildName(avatarId, buildName){
-    return (buildName === null)?(`${avatarId}`):(buildName);
-  }
+    function avatarIdOrBuildName(avatarId, buildName){
+      return (buildName === null)?(`${avatarId}`):(buildName);
+    }
    
     function buildNameGetter(buildName){
         if(buildName === null)
@@ -251,6 +265,10 @@ function CharacterCard({item}) {
       return (base + (base*percent) + flat).toFixed()
     }
 
+    function artifactIconGetter(name){
+      return "http://enka.network/ui/"+name+".png";
+    }
+
     function artifactFlowerImageGetter(setNameKey, artifactArray){
       let intermediatePart = ""
       for(let i = 0; i < artifactArray.length; i++){
@@ -260,11 +278,161 @@ function CharacterCard({item}) {
         }
       }
     }
+
+    const propIcons = {
+      FIGHT_PROP_ATTACK: ATK,
+      FIGHT_PROP_HP: HP,
+      FIGHT_PROP_DEFENSE: DEF,
+      FIGHT_PROP_HP_PERCENT: HPP,
+      FIGHT_PROP_ATTACK_PERCENT: ATKP,
+      FIGHT_PROP_DEFENSE_PERCENT: DEFP,
+      FIGHT_PROP_CRITICAL: CR,
+      FIGHT_PROP_CRITICAL_HURT: CD,
+      FIGHT_PROP_CHARGE_EFFICIENCY: ER,
+      FIGHT_PROP_HEAL_ADD: HEAL,
+      FIGHT_PROP_ELEMENT_MASTERY: EM,
+      FIGHT_PROP_PHYSICAL_ADD_HURT: PHYS,
+      FIGHT_PROP_FIRE_ADD_HURT: PYRO,
+      FIGHT_PROP_ELEC_ADD_HURT: ELECTRO,
+      FIGHT_PROP_WATER_ADD_HURT: HYDRO,
+      FIGHT_PROP_WIND_ADD_HURT: ANEMO,
+      FIGHT_PROP_ICE_ADD_HURT: CRYO,
+      FIGHT_PROP_ROCK_ADD_HURT: GEO,
+      FIGHT_PROP_GRASS_ADD_HURT: DENDRO
+    };
+
+    const emptyArts = {
+      0: FL,
+      1: FE,
+      2: SA,
+      3: GO,
+      4: CI
+    }
+
+    function getPercentSymbol(text){
+      let parts = text.split('_')
+      let lastItem = parts[parts.length - 1]
+      switch(lastItem){
+        case "HURT": 
+        case "EFFICIENCY":
+        case "CRITICAL": 
+        case "PERCENT": 
+        case "ADD": return "%"
+        default: return ""
+      }
+    }
+
+    function showArtifacts(artifactList, n) {
+      const equipType = switchType(n);
+      if (!equipType) {
+        console.log("Invalid equip type index.");
+        return null;
+      }
+    
+      for (const artifact of artifactList) {
+        if (artifact.flat && artifact.flat.equipType === equipType) {
+          return (
+          <div className={`flex mb-2.5 p-1 rounded-3xl overflow-hidden max-h-[18%] h-[18%] justify-start relative w-[100%]  `}
+          style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)', borderColor: shades.ligma}}>
+          
+            <div className=" w-full h-full absolute flex">
+              <img src={artifactIconGetter(artifact.flat.icon)} className=' scale-125 ml-[-3%]'
+               />
+               <div className=" absolute bg-black/62 rounded-3xl px-1 pr-[1.75%] text-xs flex items-center justify-center  top-1 left-[14%] afacad-light">
+                +{artifact.reliquary.level - 1}
+               </div>
+            </div>
+            <div className={`absolute flex h-full w-full justify-end `}>
+              <div className=" p-5 w-[25%] flex flex-col items-center justify-center -mt-1"
+              style={{backgroundImage: `linear-gradient(to left, ${shades.darker}80,${shades.light}1A)`}}
+              >
+                <img src={propIcons[artifact.flat.reliquaryMainstat.mainPropId]} className=' scale-[60%] -mb-2 ml-1 scale-75  mt-' />
+                <p className='afacad-light -mt-1 ml-1'>{artifact.flat.reliquaryMainstat.statValue}{getPercentSymbol(artifact.flat.reliquaryMainstat.mainPropId)}</p>
+              </div>
+              <div className={` p-2 w-[60%] w-mac -mt-1  flex flex-col justify-evenly items-center afacad-light text-lg pl-3 `}
+                style={{ boxShadow: `0 0 0 2px ${shades.ligma}B3 `}}
+              >
+                
+                <div className="flex justify-evenly h-full w-full "> 
+                  
+                    {(artifact.flat.reliquarySubstats[0] !== null) &&
+                      <div className=" flex items-center  w-full">
+                        
+                        <img src={propIcons[artifact.flat.reliquarySubstats[0].appendPropId]}
+                          className='w-[25px] h-[25px]'
+                        />
+                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[0].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[0].appendPropId)}</p>
+                      </div>
+                     }
+
+                     {(artifact.flat.reliquarySubstats[1] !== null) &&
+                      <div className=" flex items-center  w-full">
+                        
+                        <img src={propIcons[artifact.flat.reliquarySubstats[1].appendPropId]}
+                          className='w-[25px] h-[25px]'
+                        />
+                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[1].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[1].appendPropId)}</p>
+                      </div>
+                     }
+                </div>
+                <div className="flex justify-evenly h-full w-full">
+                    {(artifact.flat.reliquarySubstats[2] !== null) &&
+                      <div className=" flex items-center  w-full">
+                        
+                        <img src={propIcons[artifact.flat.reliquarySubstats[2].appendPropId]}
+                          className='w-[25px] h-[25px]'
+                        />
+                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[2].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[2].appendPropId)}</p>
+                      </div>
+                     }
+                     {(artifact.flat.reliquarySubstats[3] !== null) &&
+                      <div className=" flex items-center  w-full">
+                        
+                        <img src={propIcons[artifact.flat.reliquarySubstats[3].appendPropId]}
+                          className='w-[25px] h-[25px]'
+                        />
+                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[3].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[3].appendPropId)}</p>
+                      </div>
+                     }
+                </div>
+                
+              </div>
+            </div>
+          
+          </div>
+          )
+        }
+      }
+      return (
+        <div className='flex mb-2.5 p-1 rounded-3xl overflow-hidden max-h-[18%] h-[18%] justify-center items-center  w-full'
+        style={{backgroundColor: `${shades.ligma}33`, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'}}>
+        
+          <div className=" w-full h-full  flex justify-center items-center">
+            <img src={emptyArts[n]} className=' scale-100 '
+             />
+          </div>
+          
+        
+        </div>
+        )
+
+    }
+
+    function switchType(num){
+      switch(num){
+        case 0: return "EQUIP_BRACER"
+        case 1: return "EQUIP_NECKLACE"
+        case 2: return "EQUIP_SHOES"
+        case 3: return "EQUIP_RING"
+        case 4: return "EQUIP_DRESS"
+        default: return null
+      }
+    }
  
   return (
 
     // <Tilt perspective={1000000} tiltReverse={true} className=''>
-      <div className='w-full h-[85%] flex rounded-3xl relative overflow-hidden ring-[2px] ring-[#B2B2B2]/20 ' style={{
+      <div id='capture-this' className='w-full h-full flex rounded-3xl relative overflow-hidden ring-[2px] ring-[#B2B2B2]/20 ' style={{
       //i want the fade to go from left to right shades.lighter to shades.darker
       background: `linear-gradient(to right, ${shades.light}, ${shades.lighter}, ${shades.darker}, ${shades.dark})`
     }}>
@@ -298,7 +466,7 @@ function CharacterCard({item}) {
                     <p className="afacad-bold text-white text-7xl">Loading...</p>
                   </div>
                 </>:
-                <div className="flex flex-col  w-full p-2 m-9 rounded-3xl">
+                <div className="flex flex-col  w-full p-2 m-9 ">
                   <div className="flex w-full nameAndCons">
                     <div className="flex flex-col  ">
                       <div className="flex ">
@@ -338,8 +506,8 @@ function CharacterCard({item}) {
 
                   </div>
 
-                  <div className="flex  wepAndStats ">
-                        <div className="flex flex-col wepstatscontainer ">
+                  <div className="flex wepAndStats  h-full ">
+                        <div className="flex flex-col wepstatscontainer min-w-[17rem] ">
                           <div className="p-2 mt-5 rounded-3xl weaponBox flex "
                            style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'}}>
                             <div className='p-2 flex items-center mb-3'>
@@ -373,7 +541,7 @@ function CharacterCard({item}) {
                               </div>
                             </div>
                           </div>
-                          <div className="p-5 mt-5 rounded-3xl statsBox flex flex-col h-full " 
+                          <SimpleBar className="p-5 mt-5 rounded-3xl statsBox flex flex-col h-mac max-h-full   " 
                           style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'}}>
 
                               <div className="flex justify-between HP mb-0.5">
@@ -578,10 +746,10 @@ function CharacterCard({item}) {
                                 </div>
                               </div>}
 
-                              <div className='mt-3'>
+                              <div className='flex flex-col justify-start '>
                               {Object.entries(currentCardInfo.currentSetEffects).map(([key, value], index) => (
                                 <div key={index}>
-                                  {(value > 1) && <div className='flex justify-between items-center '>
+                                  {(value > 1) && <div className='flex justify-between items-center mb-[-5px]'>
 
                                     <div className="flex items-center text-left max-w-[12rem]">
                                       <img src={artifactFlowerImageGetter(key, currentCardInfo.artifactList)} className='w-[30px] h-[30px]' />
@@ -595,7 +763,16 @@ function CharacterCard({item}) {
                               ))}
                             </div>
 
-                          </div>
+                          </SimpleBar>
+                        </div>
+                        <div className=" p- mt-5 ml-5 flex flex-col thisIsArtifactContainer  w-[40%] w-mac">
+
+                                {showArtifacts(currentCardInfo.artifactList, 0)}
+                                {showArtifacts(currentCardInfo.artifactList, 1)}
+                                {showArtifacts(currentCardInfo.artifactList, 2)}
+                                {showArtifacts(currentCardInfo.artifactList, 3)}
+                                {showArtifacts(currentCardInfo.artifactList, 4)}
+
                         </div>
                   </div>
                   
