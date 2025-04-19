@@ -7,6 +7,7 @@ import weaponDictionary from '../../../assets/loc.json'
 import locJSON from '../../../assets/loc.json'
 import loading from '../../../assets/loading.gif'
 
+
 import 'simplebar-react/dist/simplebar.min.css';
 import SimpleBar from 'simplebar-react';
 
