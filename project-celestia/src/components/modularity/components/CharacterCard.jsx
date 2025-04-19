@@ -6,7 +6,6 @@ import axios from 'axios'
 import weaponDictionary from '../../../assets/loc.json'
 import locJSON from '../../../assets/loc.json'
 import loading from '../../../assets/loading.gif'
-
 import ATK from '../../../assets/icons/ATK.png';
 import HP from '../../../assets/icons/HP.png';
 import DEF from '../../../assets/icons/DEF.png';
