@@ -334,42 +334,49 @@ function CharacterCard({item}) {
         if (artifact.flat && artifact.flat.equipType === equipType) {
           console.log("THIS IS",artifact)
           return (
-            <div className="relative rounded-3xl weaponBox flex min-w-[100%] h-[100%] m-2 p-2"
-            style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'}}>
-             <div className='w-full rounded-3xl flex flex-col text-bl'>
-              <div className='flex items-center justify-between p-2'>
-                <div>
-                  <img className='h-[25px] w-[25px]' src={propIcons[artifact.flat.reliquaryMainstat.mainPropId]} alt="" />
-                  <p className='afacad-light text-2xl'>{artifact.flat.reliquaryMainstat.statValue}{getPercentSymbol(artifact.flat.reliquaryMainstat.mainPropId)}</p>
+            <div className="relative rounded-3xl weaponBox  flex min-w-[100%] h-[100%] m-2  p-0.5 bg-right bg-contain bg-no-repeat bg-center w-full"
+            style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)', backgroundImage: `url(${artifactIconGetter(artifact.flat.icon)}) `  }}>
+              <div className="relative w-full h-full rounded-3xl" style={{ backdropFilter: 'blur(01.5px)',WebkitBackdropFilter: 'blur(01px)',backgroundImage: `linear-gradient(to right, ${shades.dark}80, ${shades.ligma}1A)`}}>
+                <div className='absolute   w-full h-full rounded-3xl flex flex-col justify-end items-start'>
+                  <img src={propIcons[artifact.flat.reliquaryMainstat.mainPropId]} className='ml-1 w-[20%] object-contain' alt="" />
+                  <p className='afacad-light text-2xl ml-2.5'>{artifact.flat.reliquaryMainstat.statValue}{getPercentSymbol(artifact.flat.reliquaryMainstat.mainPropId)}</p>
                 </div>
-                <img className='h-[5rem] w-[5rem] mt-[-0.5rem]' src={artifactIconGetter(artifact.flat.icon)} alt="" />
-              </div>
-              <div className='absolute w-full h-full rounded-3xl flex justify-center items-center mt-[-0.5rem] ml-[-0.5rem]'>
-                <div className='flex items-center justify-center'>
-                  <div>
-                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
-                        <img src={propIcons[artifact.flat.reliquarySubstats[0].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
-                        <p>{artifact.flat.reliquarySubstats[0].statValue.toFixed(1)}</p>
+                <div className='absolute w-full h-full rounded-3xl flex flex-col rounded-3xl justify-end items-center '>
+                  <div className='-mr-25 '>
+                    <div className='mt-5  mb-2  backdrop-blur-xs rounded-3xl text-white afacad-light justify-end items-end'>
+                      <p className='afacad-light rounded-3xl px-1' style={{backgroundColor: shades.abitdark}} >+{artifact.reliquary.level -1}/20</p>
                     </div>
-                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
-                    <img src={propIcons[artifact.flat.reliquarySubstats[1].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
-                    <p>{artifact.flat.reliquarySubstats[1].statValue.toFixed(1)}</p>
+                    <div className='mb-6'>
+                      {starRenderer(artifact.flat.rankLevel)}
                     </div>
                   </div>
-                  <div>
-                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
-                    <img src={propIcons[artifact.flat.reliquarySubstats[2].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
-                    <p>{artifact.flat.reliquarySubstats[2].statValue.toFixed(1)}</p>
+                  
+                </div>
+                <div className='absolute   w-full h-full rounded-3xl flex flex-col justify-start items-end'>
+                  <div className='flex justify-end m-0.5 mr-0.5 mt-1'>
+                    <div className='flex flex-col justify-start items-start'>
+                      <div className="backdrop-blur-xs rounded-3xl text-white px-2 afacad-light flex w-[90%] justify-center items-center m-0.5" style={{backgroundColor: shades.abitdark}}>
+                          <img src={propIcons[artifact.flat.reliquarySubstats[0].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                          <p>{artifact.flat.reliquarySubstats[0].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[0].appendPropId)}</p>
+                      </div>
+                      <div className="backdrop-blur-xs rounded-3xl text-white px-2 afacad-light flex w-[90%] justify-center items-center m-0.5" style={{backgroundColor: shades.abitdark}}>
+                        <img src={propIcons[artifact.flat.reliquarySubstats[1].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                        <p>{artifact.flat.reliquarySubstats[1].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[0].appendPropId)}</p>
+                      </div>
                     </div>
-                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
-                    <img src={propIcons[artifact.flat.reliquarySubstats[3].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
-                    <p>{artifact.flat.reliquarySubstats[3].statValue.toFixed(1)}</p>
+                    <div className=' flex flex-col justify-start items-start'>
+                      <div className="backdrop-blur-xs rounded-3xl text-white px-2 afacad-light flex w-[90%] justify-center items-center m-0.5" style={{backgroundColor: shades.abitdark}}>
+                          <img src={propIcons[artifact.flat.reliquarySubstats[2].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                          <p>{artifact.flat.reliquarySubstats[2].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[0].appendPropId)}</p>
+                      </div>
+                      <div className=" backdrop-blur-xs rounded-3xl text-white px-2 afacad-light flex w-[90%] justify-center items-center m-0.5" style={{backgroundColor: shades.abitdark}}>
+                        <img src={propIcons[artifact.flat.reliquarySubstats[3].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                        <p>{artifact.flat.reliquarySubstats[3].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[0].appendPropId)}</p>
+                      </div>
                     </div>
                   </div>
-                
                 </div>
               </div>
-             </div>
            </div>
           )
         }
@@ -804,15 +811,15 @@ function CharacterCard({item}) {
 
                           </SimpleBar>
                         </div>
-                        <div className=" mt-5 ml-5 flex m-3 thisIsArtifactContainer items-center justify-center  w-[100%] w-mac">
-                          <div className='flex flex-col w-full items-center justify-center h-[30%]'>
+                        <div className=" mt-5 -ml-15 flex m-3 thisIsArtifactContainer items-center justify-center  w-[100%] w-mac">
+                          <div className='flex flex-col w-[35%] items-center justify-center h-[100%]'>
                                 {showArtifacts(currentCardInfo.artifactList, 0)}
                                 {showArtifacts(currentCardInfo.artifactList, 1)}
                                 {showArtifacts(currentCardInfo.artifactList, 2)}
                           </div>
-                          <div className='flex flex-col w-full m-3 items-center justify-center h-[30%]'>
-                            {showArtifacts2(currentCardInfo.artifactList, 3)}
-                            {showArtifacts2(currentCardInfo.artifactList, 4)}
+                          <div className='flex flex-col w-[35%] m-3 items-center justify-center h-[66%]'>
+                            {showArtifacts(currentCardInfo.artifactList, 3)}
+                            {showArtifacts(currentCardInfo.artifactList, 4)}
                           </div>
 
                         </div>
