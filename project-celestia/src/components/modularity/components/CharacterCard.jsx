@@ -332,75 +332,113 @@ function CharacterCard({item}) {
     
       for (const artifact of artifactList) {
         if (artifact.flat && artifact.flat.equipType === equipType) {
+          console.log("THIS IS",artifact)
           return (
-          <div className={`flex mb-2.5 p-1 rounded-3xl overflow-hidden max-h-[18%] h-[18%] justify-start relative w-[100%]  `}
-          style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)', borderColor: shades.ligma}}>
-          
-            <div className=" w-full h-full absolute flex">
-              <img src={artifactIconGetter(artifact.flat.icon)} className=' scale-125 ml-[-3%]'
-               />
-               <div className=" absolute bg-black/62 rounded-3xl px-1 pr-[1.75%] text-xs flex items-center justify-center  top-1 left-[14%] afacad-light">
-                +{artifact.reliquary.level - 1}
-               </div>
-            </div>
-            <div className={`absolute flex h-full w-full justify-end `}>
-              <div className=" p-5 w-[25%] flex flex-col items-center justify-center -mt-1"
-              style={{backgroundImage: `linear-gradient(to left, ${shades.darker}80,${shades.light}1A)`}}
-              >
-                <img src={propIcons[artifact.flat.reliquaryMainstat.mainPropId]} className=' scale-[60%] -mb-2 ml-1 scale-75  mt-' />
-                <p className='afacad-light -mt-1 ml-1'>{artifact.flat.reliquaryMainstat.statValue}{getPercentSymbol(artifact.flat.reliquaryMainstat.mainPropId)}</p>
-              </div>
-              <div className={` p-2 w-[60%] w-mac -mt-1  flex flex-col justify-evenly items-center afacad-light text-lg pl-3 `}
-                style={{ boxShadow: `0 0 0 2px ${shades.ligma}B3 `}}
-              >
-                
-                <div className="flex justify-evenly h-full w-full "> 
-                  
-                    {(artifact.flat.reliquarySubstats[0] !== null) &&
-                      <div className=" flex items-center  w-full">
-                        
-                        <img src={propIcons[artifact.flat.reliquarySubstats[0].appendPropId]}
-                          className='w-[25px] h-[25px]'
-                        />
-                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[0].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[0].appendPropId)}</p>
-                      </div>
-                     }
-
-                     {(artifact.flat.reliquarySubstats[1] !== null) &&
-                      <div className=" flex items-center  w-full">
-                        
-                        <img src={propIcons[artifact.flat.reliquarySubstats[1].appendPropId]}
-                          className='w-[25px] h-[25px]'
-                        />
-                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[1].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[1].appendPropId)}</p>
-                      </div>
-                     }
+            <div className="relative rounded-3xl weaponBox flex min-w-[100%] h-[100%] m-2 p-2"
+            style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'}}>
+             <div className='w-full rounded-3xl flex flex-col text-bl'>
+              <div className='flex items-center justify-between p-2'>
+                <div>
+                  <img className='h-[25px] w-[25px]' src={propIcons[artifact.flat.reliquaryMainstat.mainPropId]} alt="" />
+                  <p className='afacad-light text-2xl'>{artifact.flat.reliquaryMainstat.statValue}{getPercentSymbol(artifact.flat.reliquaryMainstat.mainPropId)}</p>
                 </div>
-                <div className="flex justify-evenly h-full w-full">
-                    {(artifact.flat.reliquarySubstats[2] !== null) &&
-                      <div className=" flex items-center  w-full">
-                        
-                        <img src={propIcons[artifact.flat.reliquarySubstats[2].appendPropId]}
-                          className='w-[25px] h-[25px]'
-                        />
-                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[2].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[2].appendPropId)}</p>
-                      </div>
-                     }
-                     {(artifact.flat.reliquarySubstats[3] !== null) &&
-                      <div className=" flex items-center  w-full">
-                        
-                        <img src={propIcons[artifact.flat.reliquarySubstats[3].appendPropId]}
-                          className='w-[25px] h-[25px]'
-                        />
-                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[3].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[3].appendPropId)}</p>
-                      </div>
-                     }
-                </div>
-                
+                <img className='h-[5rem] w-[5rem] mt-[-0.5rem]' src={artifactIconGetter(artifact.flat.icon)} alt="" />
               </div>
-            </div>
-          
+              <div className='absolute w-full h-full rounded-3xl flex justify-center items-center mt-[-0.5rem] ml-[-0.5rem]'>
+                <div className='flex items-center justify-center'>
+                  <div>
+                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
+                        <img src={propIcons[artifact.flat.reliquarySubstats[0].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                        <p>{artifact.flat.reliquarySubstats[0].statValue.toFixed(1)}</p>
+                    </div>
+                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
+                    <img src={propIcons[artifact.flat.reliquarySubstats[1].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                    <p>{artifact.flat.reliquarySubstats[1].statValue.toFixed(1)}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
+                    <img src={propIcons[artifact.flat.reliquarySubstats[2].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                    <p>{artifact.flat.reliquarySubstats[2].statValue.toFixed(1)}</p>
+                    </div>
+                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
+                    <img src={propIcons[artifact.flat.reliquarySubstats[3].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                    <p>{artifact.flat.reliquarySubstats[3].statValue.toFixed(1)}</p>
+                    </div>
+                  </div>
+                
+                </div>
+              </div>
+             </div>
+           </div>
+          )
+        }
+      }
+      return (
+        <div className='flex mb-2.5 p-1 rounded-3xl overflow-hidden max-h-[18%] h-[18%] justify-center items-center  w-full'
+        style={{backgroundColor: `${shades.ligma}33`, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'}}>
+        
+          <div className=" w-full h-full  flex justify-center items-center">
+            <img src={emptyArts[n]} className=' scale-100 '
+             />
           </div>
+          
+        
+        </div>
+        )
+
+    }
+
+    function showArtifacts2(artifactList, n) {
+      const equipType = switchType(n);
+      if (!equipType) {
+        console.log("Invalid equip type index.");
+        return null;
+      }
+    
+      for (const artifact of artifactList) {
+        if (artifact.flat && artifact.flat.equipType === equipType) {
+          console.log("THIS IS",artifact)
+          return (
+            <div className="relative rounded-3xl weaponBox flex min-w-[100%] h-[100%] m-2 p-2"
+            style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'}}>
+             <div className='w-full rounded-3xl flex flex-col text-bl'>
+              <div className='flex items-center justify-between p-2'>
+              <img className='h-[5rem] w-[5rem] mt-[-0.5rem] mr-1' src={artifactIconGetter(artifact.flat.icon)} alt="" />
+                <div>
+                
+                  <img className='h-[25px] w-[25px]' src={propIcons[artifact.flat.reliquaryMainstat.mainPropId]} alt="" />
+                  <p className='afacad-light text-2xl'>{artifact.flat.reliquaryMainstat.statValue}{getPercentSymbol(artifact.flat.reliquaryMainstat.mainPropId)}</p>
+                </div>
+                
+              </div>
+              <div className='absolute w-full h-full rounded-3xl flex justify-center items-center mt-[-0.5rem] ml-[-0.5rem]'>
+                <div className='flex items-center justify-center'>
+                  <div>
+                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
+                        <img src={propIcons[artifact.flat.reliquarySubstats[0].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                        <p>{artifact.flat.reliquarySubstats[0].statValue.toFixed(1)}</p>
+                    </div>
+                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
+                    <img src={propIcons[artifact.flat.reliquarySubstats[1].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                    <p>{artifact.flat.reliquarySubstats[1].statValue.toFixed(1)}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
+                    <img src={propIcons[artifact.flat.reliquarySubstats[2].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                    <p>{artifact.flat.reliquarySubstats[2].statValue.toFixed(1)}</p>
+                    </div>
+                    <div className=" rounded-3xl text-white px-2 afacad-light flex items-center" style={{backgroundColor: shades.abitdark}}>
+                    <img src={propIcons[artifact.flat.reliquarySubstats[3].appendPropId]} alt="" className='w-[20px] h-[20px]'/>
+                    <p>{artifact.flat.reliquarySubstats[3].statValue.toFixed(1)}</p>
+                    </div>
+                  </div>
+                
+                </div>
+              </div>
+             </div>
+           </div>
           )
         }
       }
@@ -766,13 +804,16 @@ function CharacterCard({item}) {
 
                           </SimpleBar>
                         </div>
-                        <div className=" p- mt-5 ml-5 flex flex-col thisIsArtifactContainer  w-[40%] w-mac">
-
+                        <div className=" mt-5 ml-5 flex m-3 thisIsArtifactContainer items-center justify-center  w-[100%] w-mac">
+                          <div className='flex flex-col w-full items-center justify-center h-[30%]'>
                                 {showArtifacts(currentCardInfo.artifactList, 0)}
                                 {showArtifacts(currentCardInfo.artifactList, 1)}
                                 {showArtifacts(currentCardInfo.artifactList, 2)}
-                                {showArtifacts(currentCardInfo.artifactList, 3)}
-                                {showArtifacts(currentCardInfo.artifactList, 4)}
+                          </div>
+                          <div className='flex flex-col w-full m-3 items-center justify-center h-[30%]'>
+                            {showArtifacts2(currentCardInfo.artifactList, 3)}
+                            {showArtifacts2(currentCardInfo.artifactList, 4)}
+                          </div>
 
                         </div>
                   </div>
