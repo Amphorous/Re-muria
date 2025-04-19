@@ -39,14 +39,14 @@ function Builds() {
   }
 
   
-
+ 
 
   
 
   return (
-    <div>
+    <div className='flex w-full h-full items-center backdrop-blur-sm'>
       {(resBool === 1)?<>
-      <div className=" flex justify-end items-end w-full h-full ">
+      <div className=" flex justify-end items-center w-full h-full ">
         <CurvedScrollListModular 
             items={rankItems}
             scrollMidpoint={0.45}   
@@ -58,7 +58,7 @@ function Builds() {
             springStiffness={250}
             springDamping={25}
         />
-        <p className="text-white afacad-bold absolute">hi</p>
+        {/* <p className="text-white afacad-bold absolute mx-6 bg-[#19be11] rounded-full p-3 hover:bg-[#549750]" onClick={handleDownload}><LuDownload /></p> */}
       </div>
     </>:<>
       <div className="w-full h-full afacad-bold text-9xl text-white flex items-center justify-center absolute backdrop-blur-xs">User builds are probably <br /> private...</div>
