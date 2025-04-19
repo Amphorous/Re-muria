@@ -75,6 +75,16 @@ body {
   }
 }
 
+@media (max-height: 986px) {
+  .h-mac {
+    max-height: 17.8rem;
+  }
+
+  .w-mac{
+    width: 65%;
+  }
+}
+
 .shimmer-bg {
   background: linear-gradient(
     110deg,
@@ -104,5 +114,20 @@ body {
 @layer components{
   .tess{
     @apply text-blue-600 text-[6rem]
+  }
+}
+
+@layer utilities {
+  .scrollbar-transparent::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scrollbar-transparent::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+
+  .scrollbar-transparent {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
   }
 }
