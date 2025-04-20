@@ -83,6 +83,26 @@ body {
   .w-mac{
     width: 65%;
   }
+
+  .mainStatBoxMac{
+    margin-left: 38%;
+    margin-top: 83%;
+  }
+
+  .mainStatBoxMacAus{
+    margin-left: -40%;
+    margin-top: 83%;
+  }
+
+  .levelR{
+    margin-left: 21%;
+    margin-top: 73%;
+  }
+
+  .levelL{
+    margin-top: 73%;
+    margin-left: 50%;
+  }
 }
 
 .shimmer-bg {

@@ -12,6 +12,7 @@ import RemurianContext from './contexts/RemurianContext';
 import Dashboard from './components/common/Dashboard';
 import Builds from './components/common/Builds';
 import Coming from './components/common/Coming';
+import FetchContext from './contexts/FetchContext';
 
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -76,9 +77,11 @@ const browserRouterObj = createBrowserRouter([
 ])
 
 createRoot(document.getElementById('root')).render(
+  <FetchContext>
   <RemurianContext>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
       <RouterProvider router = {browserRouterObj} />
     </ClerkProvider>
   </RemurianContext>
+  </FetchContext>
 )
