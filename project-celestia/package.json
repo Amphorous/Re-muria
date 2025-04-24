@@ -26,6 +26,7 @@
     "react-parallax-tilt": "^1.7.291",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.4.0",
+    "recharts": "^2.15.3",
     "simplebar": "^6.3.0",
     "simplebar-react": "^3.3.0",
     "tailwindcss": "^4.1.3",

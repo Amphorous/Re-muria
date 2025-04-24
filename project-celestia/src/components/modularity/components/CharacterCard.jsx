@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import deHashStats from '../../../assets/deHashStats.json'
 import {FastAverageColor} from 'fast-average-color';
 import tinycolor from 'tinycolor2';
@@ -6,10 +6,22 @@ import axios from 'axios'
 import weaponDictionary from '../../../assets/loc.json'
 import locJSON from '../../../assets/loc.json'
 import loading from '../../../assets/loading.gif'
+import { MdEditSquare } from "react-icons/md";
+import { CiSaveUp1 } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
 
 
 import 'simplebar-react/dist/simplebar.min.css';
 import SimpleBar from 'simplebar-react';
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts';
 
 import ATK from '../../../assets/icons/ATK.png';
 import HP from '../../../assets/icons/HP.png';
@@ -37,10 +49,16 @@ import FL from '../../../assets/icons/FL.webp';
 import SA from '../../../assets/icons/SA.webp';
 import GO from '../../../assets/icons/GO.webp';
 import CI from '../../../assets/icons/CI.webp';
+import { useForm } from 'react-hook-form';
+import { remurianContextObj } from '../../../contexts/RemurianContext';
+import { useParams } from 'react-router-dom';
+import DamageGraph from './DamageGraph';
 
 
 function CharacterCard({item}) {
 
+  const {remurian} = useContext(remurianContextObj);
+  const { register, handleSubmit } = useForm();
   const [shades, setShades] = useState({
     GRAY:      "#B2B2B2",
     ligma:     "#E0E0E0",  
@@ -50,14 +68,23 @@ function CharacterCard({item}) {
     darker:    "#7F7F7F",
     dark:      "#666666"   
   });
+
+  const params = useParams()
+  const webUid = params.uid
+  const [currentDamageObj, setCurrentDamageObj] = useState(null)
+  const [damages, setDamages] = useState({"0":{"test":"test"}})
+  const [showDamage, setShowDamage] = useState(false)
+  const [err, setErr] = useState("");
+  const [buildEditBool, setBuildEditBool] = useState(false);
   const [gachaImageLoaded, setGachaImageLoaded] = useState(false);
   const [cardMap, setCardMap] = useState({"0":{"test":"test"}});
   const [currentCardInfo, setCurrentCardInfo] = useState(null);
   const [iconsAsset, setIconsAsset] = useState({"0":{"test":"test"}});
   const [currentIconAsset, setCurrentIconAsset] = useState(null);
+  
 
   useEffect(()=>{
-    console.log(item.category)
+    setShowDamage(false)
   }, [item.buildName, item.avatarId])
 
   useEffect(() => {
@@ -89,7 +116,80 @@ function CharacterCard({item}) {
     img.onerror = (e) => {
       console.error('Image failed to load:', e);
     };
-  }, [item.gachaIcon]);
+
+    const canvas = document.getElementById('starCanvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+
+    const resizeCanvas = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Custom color for the streams
+    const streamColor = `${shades.light}`;
+
+    const streams = Array.from({ length: 8 }).map((_, i) => ({
+        offset: i * 190,
+        amplitude: 140 + Math.random() * 40,
+        speed: 0.7 + Math.random(),
+        phase: Math.random() * Math.PI * 2,
+        thickness: 130 + Math.random() * 40,
+    }));
+
+    let t = 0;
+
+    const draw = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.save(); // Save the current state before rotation
+        ctx.translate(canvas.width / 2, canvas.height / 2); // Move to the center of the canvas
+        ctx.rotate((-45 * Math.PI) / 180); // Rotate 25 degrees (convert to radians)
+        ctx.translate(-canvas.width / 2, -canvas.height / 2);
+
+        for (const stream of streams) {
+            ctx.beginPath();
+
+            for (let x = 0; x < canvas.width; x += 10) {
+                const y =
+                    Math.sin(x * 0.005 + t * stream.speed + stream.phase) *
+                        stream.amplitude +
+                    canvas.height / 2 +
+                    stream.offset -
+                    250;
+
+                if (x === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+
+            ctx.strokeStyle = streamColor;
+            ctx.lineWidth = stream.thickness;
+            ctx.shadowColor = streamColor.replace(/0\.2/, '1');
+            ctx.shadowBlur = 40;
+            ctx.stroke();
+        }
+
+        ctx.restore();
+
+        t += 0.02;
+        animationFrameId = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+        window.removeEventListener('resize', resizeCanvas);
+        cancelAnimationFrame(animationFrameId);
+    };
+
+  }, [item.buildName, item.avatarId,item.gachaIcon,shades.lighter]);
 
   useEffect(() => {
     setCurrentCardInfo(null)
@@ -323,99 +423,276 @@ function CharacterCard({item}) {
       }
     }
 
+    function nameCardLink(sideIcon) {
+      const parts1 = sideIcon.split('_');
+      const name = parts1.at(-1).split('.')[0];
+      return `https://enka.network/ui/UI_NameCardPic_${name}_P.png`;
+    }
+
     function showArtifacts(artifactList, n) {
       const equipType = switchType(n);
       if (!equipType) {
         console.log("Invalid equip type index.");
         return null;
       }
+
+      function getMarginLeft(index) {
+        const base = 42;       
+        const amplitude = 9; 
+        const frequency = 7.0;   
+      
+        const offset = Math.sin(index * frequency) * amplitude;
+        return `${base + offset}%`;
+      }
+
+      function getMarginRight(index) {
+        const base = 42;       
+        const amplitude = 9; 
+        const frequency = 7.0;   
+      
+        const offset = Math.sin(index * frequency) * amplitude;
+        return `${base + offset}%`;
+      }
+
+      function getBorderColorByRank(rankLevel) {
+        switch (rankLevel) {
+          case 1:
+            return 'border-gray-400';    // Common
+          case 2:
+            return 'border-green-500';   // Uncommon
+          case 3:
+            return 'border-blue-500';    // Rare
+          case 4:
+            return 'border-purple-500';  // Epic
+          case 5:
+            return 'border-yellow-400';  // Legendary
+          default:
+            return 'border-neutral-300'; // Fallback/default
+        }
+      }
+      
+      const lightColorImage = 'data:image/svg+xml;base64,' + btoa(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="1" height="1">
+          <rect width="1" height="1" fill="${shades.lighter}" />
+        </svg>
+      `);
     
       for (const artifact of artifactList) {
         if (artifact.flat && artifact.flat.equipType === equipType) {
-          return (
-          <div className={`flex mb-2.5 p-1 rounded-3xl overflow-hidden max-h-[18%] h-[18%] justify-start relative w-[100%]  `}
-          style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)', borderColor: shades.ligma}}>
-          
-            <div className=" w-full h-full absolute flex">
-              <img src={artifactIconGetter(artifact.flat.icon)} className=' scale-125 ml-[-3%]'
-               />
-               <div className=" absolute bg-black/62 rounded-3xl px-1 pr-[1.75%] text-xs flex items-center justify-center  top-1 left-[14%] afacad-light">
-                +{artifact.reliquary.level - 1}
-               </div>
-            </div>
-            <div className={`absolute flex h-full w-full justify-end `}>
-              <div className=" p-5 w-[25%] flex flex-col items-center justify-center -mt-1"
-              style={{backgroundImage: `linear-gradient(to left, ${shades.darker}80,${shades.light}1A)`}}
-              >
-                <img src={propIcons[artifact.flat.reliquaryMainstat.mainPropId]} className=' scale-[60%] -mb-2 ml-1 scale-75  mt-' />
-                <p className='afacad-light -mt-1 ml-1'>{artifact.flat.reliquaryMainstat.statValue}{getPercentSymbol(artifact.flat.reliquaryMainstat.mainPropId)}</p>
-              </div>
-              <div className={` p-2 w-[60%] w-mac -mt-1  flex flex-col justify-evenly items-center afacad-light text-lg pl-3 `}
-                style={{ boxShadow: `0 0 0 2px ${shades.ligma}B3 `}}
-              >
-                
-                <div className="flex justify-evenly h-full w-full "> 
-                  
-                    {(artifact.flat.reliquarySubstats[0] !== null) &&
-                      <div className=" flex items-center  w-full">
-                        
-                        <img src={propIcons[artifact.flat.reliquarySubstats[0].appendPropId]}
-                          className='w-[25px] h-[25px]'
-                        />
-                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[0].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[0].appendPropId)}</p>
-                      </div>
-                     }
+          if(equipType === switchType(0) || equipType === switchType(2) || equipType === switchType(4)){
+            return (
+              <div className='  -mt-2 flex h-[20%] max-h-[20%] relative ml-1.5'>
+  
+                  <div
+                  className="rounded-full h-[140%] absolute aspect-square flex "
+                  style={{ boxShadow: `0 0 0 1px #B2B2B24D` }}>
+                    <div className="absolute h-[88%] big:h-[72%] w-[140%] mt-1 rounded-3xl ml-[30%] shadow-md flex flex-col justify-start py-1 pb-5 items-start"
+                    style={{backgroundColor: `${shades.light}`}}
+                    >
+                    {artifact.flat.reliquarySubstats.map((sub, i) => (
+                      <div
+                        key={i}
+                        className="bg-black/42 flex items-center justify-center rounded-3xl px-2 m-0.5"
+                        style={{ marginLeft: getMarginLeft(i) }}
+                      >
+                        <img src={propIcons[sub.appendPropId]} className='h-[20px]' />
+                        <p className="afacad-bold text-sm ml-1">+{sub.statValue}{getPercentSymbol(sub.appendPropId)}</p>
+                      </div>))}
+                  </div>
 
-                     {(artifact.flat.reliquarySubstats[1] !== null) &&
-                      <div className=" flex items-center  w-full">
-                        
-                        <img src={propIcons[artifact.flat.reliquarySubstats[1].appendPropId]}
-                          className='w-[25px] h-[25px]'
-                        />
-                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[1].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[1].appendPropId)}</p>
+                  <div className={`hull w-full overflow-hidden rounded-full border-4  ${getBorderColorByRank(artifact.flat.rankLevel)}`}>
+                    <div className="rounded-full h-full w-full blur-[0.3px]"
+                      // style={{
+                      //   backgroundImage: `repeating-linear-gradient(
+                      //     -45deg,
+                      //     ${shades.lighter},
+                      //     ${shades.lighter} 10px,
+                      //     transparent 10px,
+                      //     transparent 20px
+                      //   )`,
+                      //   backgroundColor: `${shades.light}` 
+                      // }}
+                      style = {{
+                        backgroundImage: `linear-gradient(to right, ${shades.lighter}B3, ${shades.light} ,transparent )`,
+                        boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'
+                      }}
+                    ></div>
+                  </div>
+
+                  <div className=" absolute w-full h-full aspect-square rounded-full flex ">
+                      <div className="absolute mainStatBoxMac ml-[55%] mt-[72.5%] p-2 rounded-3xl flex px-3 items-center w-[100%] justify-center shadow-md"
+                          style={{backgroundColor: `${shades.lighter}`}}
+                        >
+                        <img src={propIcons[artifact.flat.reliquaryMainstat.mainPropId]} className='w-[28px] aspect-square' />
+                        <p className="afacad-bold text-2xl ml-1"
+                        >+{artifact.flat.reliquaryMainstat.statValue}{getPercentSymbol(artifact.flat.reliquaryMainstat.mainPropId)}</p>
                       </div>
-                     }
+                      <img src={artifactIconGetter(artifact.flat.icon)} alt="" className='absolute ] aspect-square' />
+                      <div className="absolute rounded-3xl afacad-bold bg-black/53 mt-[65%] levelL ml-[68%] px-1 flex justify-center items-center text-sm">
+                        +{artifact.reliquary.level - 1}
+                      </div>
+                      
+                  </div>
                 </div>
-                <div className="flex justify-evenly h-full w-full">
-                    {(artifact.flat.reliquarySubstats[2] !== null) &&
-                      <div className=" flex items-center  w-full">
-                        
-                        <img src={propIcons[artifact.flat.reliquarySubstats[2].appendPropId]}
-                          className='w-[25px] h-[25px]'
-                        />
-                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[2].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[2].appendPropId)}</p>
-                      </div>
-                     }
-                     {(artifact.flat.reliquarySubstats[3] !== null) &&
-                      <div className=" flex items-center  w-full">
-                        
-                        <img src={propIcons[artifact.flat.reliquarySubstats[3].appendPropId]}
-                          className='w-[25px] h-[25px]'
-                        />
-                        <p className='ml-1'>+{artifact.flat.reliquarySubstats[3].statValue.toFixed(1)}{getPercentSymbol(artifact.flat.reliquarySubstats[3].appendPropId)}</p>
-                      </div>
-                     }
-                </div>
-                
+  
               </div>
-            </div>
-          
-          </div>
-          )
-        }
+            )
+          } else {
+            return(
+              <div className='  -mt-2 flex h-[20%] max-h-[20%] relative justify-end -mr-4'>
+  
+                  <div
+                  className="rounded-full h-[140%] absolute aspect-square flex "
+                  style={{ boxShadow: `0 0 0 1px #B2B2B24D` }}
+                >
+                
+                  <div className="absolute h-[88%] w-[140%]  rounded-3xl ml-[-70%] mt-1 shadow-md flex flex-col justify-start py-1 pb-5 items-end"
+                  style={{backgroundColor: `${shades.light}`}}
+                  >
+
+                    {artifact.flat.reliquarySubstats.map((sub, i) => (
+                      <div
+                        key={i}
+                        className="bg-black/42 flex items-center justify-center rounded-3xl px-2 m-0.5"
+                        style={{ marginRight: getMarginRight(i) }}
+                      >
+                        <img src={propIcons[sub.appendPropId]} className='h-[20px]' />
+                        <p className="afacad-bold text-sm ml-1">+{sub.statValue}{getPercentSymbol(sub.appendPropId)}</p>
+                      </div>))}
+
+                  </div>
+
+                  <div className={`hull w-full overflow-hidden rounded-full border-4 ${getBorderColorByRank(artifact.flat.rankLevel)}`}>
+                    <div className="rounded-full h-full w-full blur-[0.3px]"
+                      // style={{
+                      //   backgroundImage: `repeating-linear-gradient(
+                      //     45deg,
+                      //     ${shades.lighter},
+                      //     ${shades.lighter} 10px,
+                      //     transparent 10px,
+                      //     transparent 20px
+                      //   )`,
+                      //   backgroundColor: `${shades.light}` // base color
+                      // }}
+                      style = {{
+                        backgroundImage: `linear-gradient(to left, ${shades.lighter}B3, ${shades.light} ,transparent )`,
+                        boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'
+                      }}
+                    ></div>
+                  </div>
+
+                  
+
+                  <div className=" absolute w-full h-full aspect-square rounded-full flex ">
+                      
+                    
+                      <div className="absolute ml-[-55%] mt-[72.5%] mainStatBoxMacAus p-2 rounded-3xl flex px-3 items-center w-[100%] justify-center shadow-md "
+                        style={{backgroundColor: `${shades.lighter}`}}
+                      >
+                        <img src={propIcons[artifact.flat.reliquaryMainstat.mainPropId]} className='w-[28px] aspect-square' />
+                        <p className="afacad-bold text-2xl ml-1"
+                        >+{artifact.flat.reliquaryMainstat.statValue}{getPercentSymbol(artifact.flat.reliquaryMainstat.mainPropId)}</p>
+                      </div>
+                      
+                      <img src={artifactIconGetter(artifact.flat.icon)} alt="" className='absolute ml-[5%] mt-[-7%] aspect-square' />
+                      <div className="absolute rounded-3xl afacad-bold bg-black/53 mt-[65%] levelR ml-[11%] px-1 flex justify-center items-center text-sm">
+                        +{artifact.reliquary.level - 1}
+                      </div>
+                  </div>
+                </div>
+              </div>
+            )
+          }
+        } 
       }
-      return (
-        <div className='flex mb-2.5 p-1 rounded-3xl overflow-hidden max-h-[18%] h-[18%] justify-center items-center  w-full'
-        style={{backgroundColor: `${shades.ligma}33`, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'}}>
-        
-          <div className=" w-full h-full  flex justify-center items-center">
-            <img src={emptyArts[n]} className=' scale-100 '
-             />
-          </div>
-          
-        
-        </div>
+      if(equipType === switchType(0) || equipType === switchType(2) || equipType === switchType(4)) {
+        return (
+          <div className='  -mt-2 flex h-[20%] max-h-[20%] relative ml-1.5'>
+
+                <div
+                className="rounded-full h-[140%] absolute aspect-square flex "
+                style={{ boxShadow: `0 0 0 1px #B2B2B24D` }}
+                >
+              
+                <div className="absolute h-[70%] w-[140%] mt-1 rounded-3xl ml-[30%] shadow-md bg-[#B2B2B2]"
+                ></div>
+
+                <div className={`hull w-full overflow-hidden rounded-full border-4  border-[#B2B2B2]`}>
+                  <div className="rounded-full h-full w-full blur-[1px]"
+                    style={{
+                      backgroundImage: `repeating-linear-gradient(
+                        -45deg,
+                        #9b9a9a,
+                        #9b9a9a 10px,
+                        transparent 10px,
+                        transparent 20px
+                      )`,
+                      backgroundColor: `${'#B2B2B2'}`, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'
+                    }}
+                  ></div>
+                </div>
+
+                <div className=" absolute w-full h-full aspect-square rounded-full flex ">
+                  <div className="absolute ml-[55%] mt-[60%] p-2 rounded-3xl flex px-3 items-center w-[100%] justify-center shadow-md bg-[#9b9a9a]"
+                    >
+                      
+                      <p className="afacad-bold text-2xl ml-1"
+                      >unequipped</p>
+                    </div>
+                    <img src={emptyArts[n]} alt="" className=' scale-50  aspect-square' />
+                    
+                </div>
+              </div>
+
+            </div>
         )
+      } else {
+        return (
+          <div className='  -mt-2 flex h-[20%] max-h-[20%] relative justify-end '>
+  
+                  <div
+                  className="rounded-full h-[140%] absolute aspect-square flex "
+                  style={{ boxShadow: `0 0 0 1px #B2B2B24D` }}
+                >
+                
+                  <div className="absolute h-[70%] w-[140%]  rounded-3xl ml-[-70%] mt-1 shadow-md bg-[#B2B2B2]"
+                  ></div>
+
+                  <div className={`hull w-full overflow-hidden rounded-full border-4 border-[#B2B2B2]`}>
+                    <div className="rounded-full h-full w-full blur-[1px]"
+                      style={{
+                        backgroundImage: `repeating-linear-gradient(
+                          45deg,
+                          #9b9a9a,
+                          #9b9a9a 10px,
+                          transparent 10px,
+                          transparent 20px
+                        )`,
+                        backgroundColor: `${'#B2B2B2'}`, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'
+                      }}
+                    ></div>
+                  </div>
+
+                  
+
+                  <div className=" absolute w-full h-full aspect-square rounded-full flex ">
+                  
+                      <div className="absolute ml-[-55%] mt-[60%] p-2 rounded-3xl flex px-3 items-center w-[100%] justify-center shadow-md bg-[#9b9a9a]">
+                        
+                        <p className="afacad-bold text-2xl ml-1"
+                        >unequipped</p>
+                      </div>
+                      <img src={emptyArts[n]} className='scale-50  aspect-square' />
+                      
+                  </div>
+                </div>
+                  
+
+                
+  
+              </div>
+        )
+      }
 
     }
 
@@ -429,6 +706,89 @@ function CharacterCard({item}) {
         default: return null
       }
     }
+
+    function nameSubmission(obj){
+      console.log("form proc")
+      setBuildEditBool(false);
+      console.log(obj)
+
+      axios.put(`http://localhost:8080/build/create`, {
+        buildName: obj.buildName,
+        avatarId: `${currentCardInfo.avatarId}`,
+        uid: webUid
+      })
+      .then((res)=>{
+        if(res.data){
+          setErr("Success")
+        } else {
+          setErr("Failed")
+        }
+      })
+      .catch((e)=>{})
+
+    }
+
+    useEffect(()=>{
+      setTimeout(() => {
+        setErr("")
+      }, 3000);
+    }, [err])
+
+    function buildDeleteHandler(buildName, avatarId, uid){
+      axios.put(`http://localhost:8080/build/delete`, {
+        buildName: buildName,
+        avatarId: avatarId,
+        uid: uid
+      })
+      .then((res)=>{
+        if(res.data){
+          setErr("Success")
+        } else {
+          setErr("Failed")
+        }
+      })
+      .catch((e)=>{})
+    }
+
+    function handleShowDamage(){
+      setShowDamage((prev)=>{
+        let updated = !prev;
+        return updated;
+      })
+
+      console.log("current damage: ",currentDamageObj)
+
+      setCurrentDamageObj(null)
+    // console.log(cardMap[`${avatarIdOrBuildName(item.avatarId, item.buildName)}`])
+    let identifier = avatarIdOrBuildName(item.avatarId, item.buildName);
+    if(damages[identifier] === undefined){
+      axios.post('http://localhost:8080/damage/getDamage', {
+            uid: webUid,
+            avatarId: `${item.avatarId}`,
+            buildName: buildNameGetter(item.buildName),
+            category: `${item.category}`
+      })
+      .then((res) => {
+              setCurrentDamageObj(res.data)
+              setDamages((prev)=>{
+                let updated = {
+                  ...prev,
+                  [identifier]: res.data
+                }
+                console.log("damages: ", updated)
+                return updated
+              })
+      })
+      .catch((err) => {
+              console.error('Error fetching build:', err);
+      });
+    } else {
+      setCurrentDamageObj(damages[identifier])
+    }
+    }
+
+  
+    
  
   return (
 
@@ -437,9 +797,10 @@ function CharacterCard({item}) {
       //i want the fade to go from left to right shades.lighter to shades.darker
       background: `linear-gradient(to right, ${shades.light}, ${shades.lighter}, ${shades.darker}, ${shades.dark})`
     }}>
+        {/* <canvas id="starCanvas" className="fixed top-0 right-0 w-[80%] h-full z-10 pointer-events-none rounded-3xl"/> */}
         <div className='gachaImageDiv w-full h-full flex items-center  ml-[-40%] rounded-3xl '>
             {(gachaImageLoaded)?<></>:<>
-                <div className="w-full h-full flex justify-center items-center z-10 absolute ">
+                <div className="w-full h-full flex justify-center items-center z-30 absolute ">
                     <img src={loading} alt="" className='w-[192px] h-[108px]'/>
                 </div>
             </>}
@@ -459,7 +820,7 @@ function CharacterCard({item}) {
                 }}
             />
         </div>
-        <div className="absolute flex justify-end rounded-3xl  w-full h-full ">
+        <div className="z-20 absolute flex justify-end rounded-3xl  w-full h-full ">
             <div className=' rounded-3xl w-[80%] backdrop-blur-xl border-l-[0.5px] border-[#B2B2B2]/39 rounded-l-4xl flex '>
               {
                 (currentCardInfo === null)?<>
@@ -468,15 +829,25 @@ function CharacterCard({item}) {
                   </div>
                 </>:
                 <div className="flex flex-col  w-full p-2 m-9 ">
-                  <div className="flex w-full nameAndCons">
+                  <form className="flex w-full nameAndCons" onSubmit={handleSubmit(nameSubmission)}>
                     <div className="flex flex-col  ">
                       <div className="flex ">
                         <p className=" afacad-light text-white/50 text-xl">{currentCardInfo.nickname}'s</p>
                       </div>
                       <div className="flex">
-                        <p className=" afacad-bold text-white text-5xl">
-                          {(item.buildName === null)?<>{nameGetter(item.nameTextMapHash)}</>:<>{textTrunc(buildNameGetter(item.buildName), 12)}</>}
-                        </p>
+                        {(buildEditBool)?<>
+                          <input 
+                          type="text" 
+                          id='buildName' 
+                          placeholder={`${(item.buildName === null)?nameGetter(item.nameTextMapHash):textTrunc(buildNameGetter(item.buildName), 12)}`}
+                          {...register('buildName')}
+                            className='afacad-bold text-white text-5xl max-w-[14.5rem] -m-2'
+                           />
+                        </>:<>
+                          <p className=" afacad-bold text-white text-5xl">
+                            {(item.buildName === null)?<>{nameGetter(item.nameTextMapHash)}</>:<>{textTrunc(buildNameGetter(item.buildName), 12)}</>}
+                          </p>
+                        </>}
                       </div>
                       <div className="flex ">
                         <p className=" afacad-light text-white/50 text-xl">Lv. {currentCardInfo.level}/90</p>
@@ -502,12 +873,64 @@ function CharacterCard({item}) {
                             </div>
                           ))
                         }
+
+                        {(remurian.uid.includes(webUid)) && 
+                        <>
+                          {(buildEditBool) ? (
+                          <>
+                            {/* GREEN SUBMIT BUTTON */}
+                            <button 
+                              type="submit" 
+                              className="ml-[2%] bg-green-700 rounded-full p-3 aspect-square"
+                            >
+                              <CiSaveUp1 size={30} className='stroke-1'/>
+                            </button>
+                          </>
+                          ) : (
+                            <>
+                              {/* BLUE EDIT TOGGLE BUTTON */}
+                              <div 
+                                className={`ml-[2%]  rounded-full p-4 aspect-square`}
+                                style={{backgroundColor: `${shades.ligma}`}}
+                                onClick={() => {
+                                  setBuildEditBool(true);
+                                }}
+                              >
+                                <MdEditSquare size={20}/>
+                              </div>
+                            </>
+                          )}
+
+                          {(currentCardInfo.buildName !== null) && <>
+                            <div 
+                                className={`ml-[2%]  rounded-full p-4 aspect-square bg-red-400`}
+                                onClick={()=>{buildDeleteHandler(buildNameGetter(item.buildName), item.avatarId, webUid)}}
+                              >
+                                <MdDelete size={20}/>
+                            </div>
+                          </>}
+
+                          {(err !== "") && <p className='afacad-bold bg-amber-800 ml-[2%] p-2 rounded-3xl'>{err}</p>}
+                        </>}
+
                       </div>
                       }
 
-                  </div>
+                  </form>
 
-                  <div className="flex wepAndStats  h-full ">
+                  {(showDamage)?
+                  <div className='flex damageContainer h-full relative'>
+
+                        <DamageGraph data={currentDamageObj}/>
+
+                        <div 
+                        onClick={()=>{handleShowDamage()}}
+
+                        className="absolute bottom-0 right-0 flex items-center justify-center rounded-full p-2  afacad-bold bg-amber-400 text-black hover:bg-amber-800 hover:text-white transition">
+                          To Builds
+                        </div>
+                  </div>:
+                  <div className="flex wepAndStats  h-full  relative">
                         <div className="flex flex-col wepstatscontainer min-w-[17rem] ">
                           <div className="p-2 mt-5 rounded-3xl weaponBox flex "
                            style={{backgroundColor: shades.light, boxShadow: 'inset 0 4px 14px rgba(0, 0, 0, 0.5)'}}>
@@ -766,7 +1189,7 @@ function CharacterCard({item}) {
 
                           </SimpleBar>
                         </div>
-                        <div className=" p- mt-5 ml-5 flex flex-col thisIsArtifactContainer  w-[40%] w-mac">
+                        <div className=" p- mt-5 ml-5 flex flex-col thisIsArtifactContainer max-h-[93%] w-[55%] w-mac ">
 
                                 {showArtifacts(currentCardInfo.artifactList, 0)}
                                 {showArtifacts(currentCardInfo.artifactList, 1)}
@@ -775,7 +1198,14 @@ function CharacterCard({item}) {
                                 {showArtifacts(currentCardInfo.artifactList, 4)}
 
                         </div>
-                  </div>
+                        {(item.category !== null) && <div 
+                        onClick={()=>{handleShowDamage()}}
+                        className="absolute bottom-0 right-0 flex items-center justify-center rounded-full p-2  afacad-bold bg-amber-400 text-black hover:bg-amber-800 hover:text-white transition">
+                          To Damage
+                        </div>}
+                  </div>}
+
+                  
                   
                 </div>
               }

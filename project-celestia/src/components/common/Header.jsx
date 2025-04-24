@@ -1,22 +1,69 @@
 import { SignInButton, SignOutButton, SignedIn, SignedOut, UserButton, useUser } from '@clerk/clerk-react'
-import React, { useEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import SignInComponent from './Validate'
+import axios from 'axios';
+import { remurianContextObj } from '../../contexts/RemurianContext';
 
 function Header() {
 
     const {isLoaded, isSignedIn, user} = useUser();
 
+    const location = useLocation();
+    const [locationString, setLocationString] = useState("");
+    const {remurian, setRemurian} = useContext(remurianContextObj);
     const navigate = useNavigate();
     const {uid} = useParams();
+
+    useEffect(()=>{
+        setLocationString(location.pathname);
+    }, [location.pathname])
+
+    useEffect(
+        ()=>{
+            if(user){
+                setRemurian((prev)=>{
+                  return {...prev, username: user?.username}
+                });
+            }
+        }, [isLoaded]
+    )
+
+    useEffect(()=>{
+        let res = null
+          axios.get(`http://localhost:8080/login/getRemurian/${remurian.username}`)
+          .then((response)=>{
+            res = response
+            setRemurian((prev)=>{
+              let updated = {
+                ...prev,
+                username: res.data.username,
+                hashcode: res.data.hashcode,
+                uid: (res.data.uid === null)?([]):(res.data.uid)
+              };
+              return updated;
+            })
+          })
+          .catch((err)=>{console.log(err)})
+    }, [remurian.username])
+
+    
 
   return (
     <div className=' w-full h-full'>
         <div className='bg-black w-full p-3 py-[2rem]'>
             <div className="bg-black flex justify-between">
                 <Link to='/'>
-                    <div className="flex">
+                    <div className="flex items-center">
                         <p className='afacad-bold text-white text-[4rem] mt-[-1.6rem] ml-[0.7rem]'>Re<span className='text-amber-400'>:</span>muria</p>
+                        {(locationString !== "") && <div className="afacad-light text-white flex items-center text-[1.5rem] mb-1 ml-1">
+                            {locationString.split('/').map((word, index)=>(
+                                <div key={index}>
+                                    <p>{word}<span className='text-amber-400'>/</span></p>
+                                </div>
+
+                            ))}
+                        </div>}
                     </div>
                 </Link>
 
