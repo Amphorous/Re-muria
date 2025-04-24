@@ -1204,8 +1204,8 @@ function CharacterCard({item}) {
                         </div>
                         {(item.category !== null) && <div 
                         onClick={()=>{handleShowDamage()}}
-                        className="absolute bottom-0 right-0 flex items-center justify-center rounded-full p-2  afacad-bold bg-amber-400 text-black hover:bg-amber-800 hover:text-white transition">
-                          To Damage
+                        className="absolute bottom-0 right-0 flex items-center justify-center rounded-full p-2  afacad-bold bg-amber-400 text-black hover:bg-amber-800 hover:text-white transition" >
+
                         </div>}
                   </div>}
 
