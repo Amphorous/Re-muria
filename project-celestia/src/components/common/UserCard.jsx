@@ -6,7 +6,10 @@ import fetter from '../../assets/fetterIcon.png';
 import axios from 'axios';
 
   function textTrunc(text, max){
-    return text.length > max ? text.slice(0, max) + '...' : text;
+    if(text != null){
+        return text.length > max ? text.slice(0, max) + '...' : text;
+    }
+    return "No signature."
   }
 
   function regionRenderer(region){
