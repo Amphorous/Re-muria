@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import CurvedScrollListModular from '../modularity/CurvedScrollListModular'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { fetchContextObj } from '../../contexts/FetchContext';
 
 function Builds() {
 
@@ -9,6 +10,7 @@ function Builds() {
 
   const params = useParams()
   const uid = params.uid
+  const {fetchCount} = useContext(fetchContextObj);
   const [rankItems, setRankItems] = useState();
   const [resBool, setResBool] = useState(1);
 
@@ -24,6 +26,19 @@ function Builds() {
     })
     .catch((err)=>{})
   }, [])
+
+  useEffect(()=>{
+    axios.get(`http://localhost:8080/damage/rankings/allBuilds/${uid}`)
+    .then((res)=>{
+        console.log("this is rankitems: ",res.data)
+        if(res.data.length === 0){
+          setResBool(0)
+        }
+        //need to add another endp which gets un built chars
+        setRankItems(res.data);
+    })
+    .catch((err)=>{})
+  }, [fetchCount])
 
   function newBuilds(){
     axios.get(`http://localhost:8080/user/${uid}`)
