@@ -27,8 +27,12 @@ const browserRouterObj = createBrowserRouter([
     element: <RootLayout />,
     children:[
       {
-        path:"",
+        path:"home",
         element: <Home />
+      },
+      {
+        path: "",
+        element: <Navigate to="home" />
       },
       {
         path:"dashboard/:uid",
