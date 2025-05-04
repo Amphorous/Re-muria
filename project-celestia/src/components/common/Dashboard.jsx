@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { HiOutlineRefresh } from "react-icons/hi";
 import UserCard from './UserCard';
 import CharacterStrip from './CharacterStrip';
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 function Dashboard() {
 
@@ -12,6 +13,7 @@ function Dashboard() {
     const navigate = useNavigate()
     
 
+    const [emptyRanks, setEmptyRanks] = useState(false);
     const [rankItems, setRankItems] = useState();
     const [resBool, setResBool] = useState(1);
     const [cardInfo, setCardInfo] = useState();
@@ -22,7 +24,9 @@ function Dashboard() {
             console.log(res.data)
             setRankItems(res.data);
         })
-        .catch((err)=>{})
+        .catch((err)=>{
+            setEmptyRanks(true);
+        })
     }, [])
 
     useEffect(()=>{
@@ -96,17 +100,38 @@ function Dashboard() {
                 </div>
             </> }
         </div>
-        <div className=' flex w-full  justify-end'>
-            <div className="flex  justify-evenly w-[75%] mr-[2.5rem] min-w-[45rem]">
-                {rankItems && <>
-                    {[...rankItems].slice(0,5).map((rankItem)=>(
-                        <div key={rankItem.category+rankItem.buildName} className='flex w-[18%] ' onClick={()=>{navigate(`/builds/${uid}`)}}>
-                            <CharacterStrip rankItem={rankItem}/>
-                        </div>
-                    ))}
-                </>}
-            </div>
-        </div>
+        
+            {
+                (!rankItems && emptyRanks) ? 
+                <div className=' flex w-full  justify-center '>
+                    <div className='  flex flex-col justify-end'>
+                            <div className="bg-white/25 rounded-[12%] -mb-14 p-11 h-[65%] flex flex-col items-center">
+                                
+                                <p className="text-5xl afacad-bold text-white">Rankings not Found!</p>
+                                <div className="flex items-center justify-center mt-3">
+                                    <p className="afacad-light text-white text-2xl">Go to Builds</p>
+                                    <IoMdArrowRoundBack  onClick={()=>{navigate(`/builds/${uid}`)}}
+                                     className=' rotate-180 bg-white rounded-full ml-2 p-0.5 hover:bg-black hover:text-white transition' size={20}/>
+                                </div>
+
+                                
+                            </div>
+                    </div>
+                </div> :
+                <div className=' flex w-full  justify-end'>
+                    <div className="flex  justify-evenly w-[75%] mr-[2.5rem] min-w-[45rem]">
+                        {rankItems && <>
+                            {[...rankItems].slice(0,5).map((rankItem)=>(
+                                <div key={rankItem.category+rankItem.buildName} className='flex w-[18%] ' onClick={()=>{navigate(`/builds/${uid}`)}}>
+                                    <CharacterStrip rankItem={rankItem}/>
+                                </div>
+                            ))}
+                        </>}
+                    </div>
+                </div>
+            }
+            
+        
     </div>
   )
 }

@@ -53,6 +53,7 @@ import { useForm } from 'react-hook-form';
 import { remurianContextObj } from '../../../contexts/RemurianContext';
 import { useParams } from 'react-router-dom';
 import DamageGraph from './DamageGraph';
+import { fetchContextObj } from '../../../contexts/FetchContext';
 
 
 function CharacterCard({item}) {
@@ -81,6 +82,7 @@ function CharacterCard({item}) {
   const [currentCardInfo, setCurrentCardInfo] = useState(null);
   const [iconsAsset, setIconsAsset] = useState({"0":{"test":"test"}});
   const [currentIconAsset, setCurrentIconAsset] = useState(null);
+  const {fetchCount, setFetchCount} = useContext(fetchContextObj);
   
 
   useEffect(()=>{
@@ -711,6 +713,7 @@ function CharacterCard({item}) {
       console.log("form proc")
       setBuildEditBool(false);
       console.log(obj)
+      
 
       axios.put(`http://localhost:8080/build/create`, {
         buildName: obj.buildName,
@@ -720,6 +723,9 @@ function CharacterCard({item}) {
       .then((res)=>{
         if(res.data){
           setErr("Success")
+          setFetchCount((old)=>{
+            return old+1;
+          })
         } else {
           setErr("Failed")
         }
@@ -743,6 +749,9 @@ function CharacterCard({item}) {
       .then((res)=>{
         if(res.data){
           setErr("Success")
+          setFetchCount((old)=>{
+            return old-1;
+          })
         } else {
           setErr("Failed")
         }

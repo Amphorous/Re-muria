@@ -25,6 +25,12 @@ function Validate() {
         }, [isLoaded]
     )
 
+    useEffect(()=>{
+      setTimeout(() => {
+        setErr("")
+      }, 3000);
+    }, [err])
+
   async function handleValidate(uid){
     console.log("came inside handleValidate")
     if(remurian.hashcode === ""){
@@ -37,36 +43,42 @@ function Validate() {
       setResBool1(0)
       let resBool = null
 
-      axios.post('http://localhost:8080/login/validate', requestBody)
-      .then((res)=>{
-        resBool = res
-        console.log("this is resbool",resBool)
-        setResBool1(1)
+      if(!remurian.uid.includes(uid)){
+        axios.post('http://localhost:8080/login/validate', requestBody)
+        .then((res)=>{
+          resBool = res
+          console.log("this is resbool",resBool)
+          setResBool1(1)
 
-        if(resBool.data === true){
-          console.log("in resBool true block")
-          setErr("UID Validated!")
-          let res = null
-          axios.get(`http://localhost:8080/login/getRemurian/${remurian.username}`)
-          .then((response)=>{
-            res = response
-            setRemurian((prev)=>{
-              let updated = {
-                ...prev,
-                username: res.data.username,
-                hashcode: res.data.hashcode,
-                uid: (res.data.uid === null)?([]):(res.data.uid)
-              };
-              return updated;
+          if(resBool.data === true){
+            console.log("in resBool true block")
+            setErr("UID Validated!")
+            let res = null
+            axios.get(`http://localhost:8080/login/getRemurian/${remurian.username}`)
+            .then((response)=>{
+              res = response
+              setRemurian((prev)=>{
+                let updated = {
+                  ...prev,
+                  username: res.data.username,
+                  hashcode: res.data.hashcode,
+                  uid: (res.data.uid === null)?([]):(res.data.uid)
+                };
+                return updated;
+              })
             })
-          })
-          .catch((err)=>{console.log(err)})
-          
-        } else if (resBool.data === false){
-          setErr("Validation unsuccessful")
-        }
-      })
-      .catch((err)=>{console.log(err)})
+            .catch((err)=>{console.log(err)})
+            
+          } else if (resBool.data === false){
+            setErr("Validation unsuccessful")
+          }
+        })
+        .catch((err)=>{console.log(err)})
+      } else {
+        setResBool1(1)
+        setErr("UID already validated!")
+      }
+      
      
     }
   }
@@ -148,7 +160,7 @@ function Validate() {
             
           </>:<>
             <div className="flex justify-center mt-3">
-              <div className="w-full ring-1 drop-shadow-sm ring-[#E3E3E3] bg-white mx-1 px-4 py-2 afacad-semi-bold rounded-3xl text-amber-400">
+              <div className="w-full ring-1 drop-shadow-sm ring-[#E3E3E3] bg-white mx-1 px-4 py-2 afacad-semi-bold rounded-3xl text-amber-800">
                 {err}
               </div>
             </div>
