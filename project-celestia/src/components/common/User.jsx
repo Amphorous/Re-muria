@@ -8,18 +8,16 @@ function User() {
     <div className='flex w-full h-full items-center text-white justify-around'>
         <div className="afacad-bold  mr-1  h-full">
         <SignedIn>
-            <div className=" rounded-2xl h-full flex items-center">
+            <div className=" rounded-2xl h-full flex items-center max-w-[19rem]">
                 
                     <div className="flex flex-col  bg-gray-600/10 backdrop-blur-md ring-1 ring-gray-300/35 rounded-2xl">
                         <p className='p-5 text-7xl pr-[10rem] pl-[2rem]'>Instructions</p>
                         <div className="ring-1 mx-11 rounded-2xl mt-[-0.5rem] ring-amber-400"></div>
-                        <ol className="p-2 text-3xl mx-10 mb-4">
-                            <li>Instructions here</li>
-                            <li>Instructions here</li>
-                            <li>Instructions here</li>
-                            <li>Instructions here</li>
-                            <li>Instructions here</li>
-                            <li>Instructions here</li>
+                        <ol className="p-2 text-xl mx-10 mb-4 afacad-light">
+                            <li>1) Click <span className='text-amber-400'>Reload</span> to generate your Verification Code</li>
+                            <li>2) Copy the Verification code and paste it in your <span className='ml-5'>game's, <span className='text-amber-400'>Edit -> Edit Signature</span></span>  </li>
+                            <li>3) Log out of the game </li>
+                            <li>4) Press Validate. If failed, <span className='text-amber-400'>wait 60 seconds</span> and retry. </li>
                         </ol>
                     </div>
                 
