@@ -53,6 +53,7 @@ import { remurianContextObj } from '../../../contexts/RemurianContext';
 import { useParams } from 'react-router-dom';
 import DamageGraph from './DamageGraph';
 import { fetchContextObj } from '../../../contexts/FetchContext';
+import { canvasContextObj } from '../../../contexts/CanvasContext';
 
 
 function CharacterCard({item}) {
@@ -82,7 +83,7 @@ function CharacterCard({item}) {
   const [iconsAsset, setIconsAsset] = useState({"0":{"test":"test"}});
   const [currentIconAsset, setCurrentIconAsset] = useState(null);
   const {fetchCount, setFetchCount} = useContext(fetchContextObj);
-  
+  const {canvasBool, setCanvasBool} = useContext(canvasContextObj);
 
   useEffect(()=>{
     setShowDamage(false)
@@ -802,10 +803,9 @@ function CharacterCard({item}) {
 
     // <Tilt perspective={1000000} tiltReverse={true} className=''>
       <div id='capture-this' className='w-full h-full flex rounded-3xl relative overflow-hidden ring-[2px] ring-[#B2B2B2]/20 ' style={{
-      //i want the fade to go from left to right shades.lighter to shades.darker
       background: `linear-gradient(to right, ${shades.light}, ${shades.lighter}, ${shades.darker}, ${shades.dark})`
     }}>
-        {/* <canvas id="starCanvas" className="fixed top-0 right-0 w-[80%] h-full z-10 pointer-events-none rounded-3xl"/> */}
+        {(canvasBool) && <canvas id="starCanvas" className="fixed top-0 right-0 w-[80%] h-full z-10 pointer-events-none rounded-3xl"/>}
         <div className='gachaImageDiv w-full h-full flex items-center  ml-[-40%] rounded-3xl '>
             {(gachaImageLoaded)?<></>:<>
                 <div className="w-full h-full flex justify-center items-center z-30 absolute ">
@@ -852,9 +852,19 @@ function CharacterCard({item}) {
                             className='afacad-bold text-white text-5xl max-w-[14.5rem] -m-2'
                            />
                         </>:<>
-                          <p className=" afacad-bold text-white text-5xl">
+                          {/* <p className=" afacad-bold text-white text-5xl whitespace-nowrap overflow-hidden">
                             {(item.buildName === null)?<>{nameGetter(item.nameTextMapHash)}</>:<>{textTrunc(buildNameGetter(item.buildName), 12)}</>}
-                          </p>
+                          </p> */}
+                          <SimpleBar
+                            className="max-w-[12.8rem] w-[12.8rem] whitespace-nowrap text-left"
+                            style={{ overflowY: 'hidden' }}
+                          >
+                            <p className="afacad-bold text-white text-5xl inline-block m-0">
+                              {item.buildName === null
+                                ? nameGetter(item.nameTextMapHash)
+                                : buildNameGetter(item.buildName)}
+                            </p>
+                          </SimpleBar>
                         </>}
                       </div>
                       <div className="flex ">

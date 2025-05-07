@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import SignInComponent from './Validate'
 import axios from 'axios';
 import { remurianContextObj } from '../../contexts/RemurianContext';
+import { canvasContextObj } from '../../contexts/CanvasContext';
 
 function Header() {
 
@@ -14,6 +15,7 @@ function Header() {
     const {remurian, setRemurian} = useContext(remurianContextObj);
     const navigate = useNavigate();
     const {uid} = useParams();
+    const {canvasBool, setCanvasBool} = useContext(canvasContextObj)
 
     useEffect(()=>{
         setLocationString(location.pathname);
@@ -46,6 +48,16 @@ function Header() {
           })
           .catch((err)=>{console.log(err)})
     }, [remurian.username])
+
+    useEffect(()=>{
+        setCanvasBool(()=>{
+            let storedCanvasBool = JSON.parse(localStorage.getItem('canvasBool'))
+            if(storedCanvasBool){
+                return storedCanvasBool;
+            }
+            return false;
+        })
+    }, [])
 
     
 
@@ -101,7 +113,7 @@ function Header() {
                                 </SignedIn>
                                 <SignedOut>
 
-                                    <Link to='user' className='ring-2 rounded-[6px] px-3 py-1 ring-amber-400 bg-gradient-to-br from-gray-800 to-gray-950 hover:bg-gradient-to-tl from-gray-800 to-gray-950'>
+                                    <Link to='user' className='ring-2 rounded-[6px] px-3 py-1 ring-amber-400 bg-gradient-to-br from-gray-800 to-gray-950 hover:bg-gradient-to-tl hover:from-gray-800 hover:to-gray-950'>
                                         Sign In
                                     </Link>
                                 </SignedOut>

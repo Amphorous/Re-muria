@@ -10,6 +10,7 @@ function FetchContext({children}) {
             {children}
         </fetchContextObj.Provider>
       )
-    }
+
+}
 
 export default FetchContext
