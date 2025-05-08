@@ -10,7 +10,6 @@ import { MdEditSquare } from "react-icons/md";
 import { CiSaveUp1 } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 
-
 import 'simplebar-react/dist/simplebar.min.css';
 import SimpleBar from 'simplebar-react';
 import {
