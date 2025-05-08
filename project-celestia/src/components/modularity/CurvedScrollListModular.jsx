@@ -60,7 +60,7 @@ export default function CurvedScrollListModular({
         scrollY.set(index * ITEM_HEIGHT);
       }
     }
-  }, [items]);
+  }, [items, items.length]);
 
   useEffect(() => {
     if (containerRef.current) {
