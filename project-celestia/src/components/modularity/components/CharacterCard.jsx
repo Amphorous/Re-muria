@@ -10,6 +10,7 @@ import { MdEditSquare } from "react-icons/md";
 import { CiSaveUp1 } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 
+
 import 'simplebar-react/dist/simplebar.min.css';
 import SimpleBar from 'simplebar-react';
 import {
@@ -1207,19 +1208,23 @@ function CharacterCard({item}) {
 
                           </SimpleBar>
                         </div>
+
                         <div className=" p- mt-5 ml-5 flex flex-col thisIsArtifactContainer max-h-[93%] w-[55%] w-mac ">
 
                                 {showArtifacts(currentCardInfo.artifactList, 0)}
                                 {showArtifacts(currentCardInfo.artifactList, 1)}
                                 {showArtifacts(currentCardInfo.artifactList, 2)}
-                                {showArtifacts(currentCardInfo.artifactList, 3)}
-                                {showArtifacts(currentCardInfo.artifactList, 4)}
+                          </div>
+                          <div className='flex flex-col w-[35%] m-3 items-center justify-center h-[66%]'>
+                            {showArtifacts(currentCardInfo.artifactList, 3)}
+                            {showArtifacts(currentCardInfo.artifactList, 4)}
+                          </div>
 
                         </div>
                         {(item.category !== null) && <div 
                         onClick={()=>{handleShowDamage()}}
-                        className="absolute bottom-0 right-0 flex items-center justify-center rounded-full p-2  afacad-bold bg-amber-400 text-black hover:bg-amber-800 hover:text-white transition">
-                          To Damage
+                        className="absolute bottom-0 right-0 flex items-center justify-center rounded-full p-2  afacad-bold bg-amber-400 text-black hover:bg-amber-800 hover:text-white transition" >
+
                         </div>}
                   </div>}
 
