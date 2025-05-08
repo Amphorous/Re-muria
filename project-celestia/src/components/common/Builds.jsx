@@ -22,6 +22,7 @@ function Builds() {
           setResBool(0)
         }
         //need to add another endp which gets un built chars
+        //changes
         setRankItems(res.data);
     })
     .catch((err)=>{})
