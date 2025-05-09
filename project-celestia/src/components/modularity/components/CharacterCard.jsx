@@ -55,6 +55,7 @@ import { useParams } from 'react-router-dom';
 import DamageGraph from './DamageGraph';
 import { fetchContextObj } from '../../../contexts/FetchContext';
 import { canvasContextObj } from '../../../contexts/CanvasContext';
+import DamageBarGraph from './DamageBarGraph';
 
 
 function CharacterCard({item}) {
@@ -941,6 +942,7 @@ function CharacterCard({item}) {
                   <div className='flex damageContainer h-full relative'>
 
                         <DamageGraph data={currentDamageObj}/>
+                        <DamageBarGraph data={currentDamageObj}/>
 
                         <div 
                         onClick={()=>{handleShowDamage()}}
