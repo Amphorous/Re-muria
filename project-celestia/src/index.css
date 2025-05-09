@@ -48,6 +48,10 @@
   writing-mode: vertical-lr;
 }
 
+.vertical-lmao{
+  writing-mode: vertical-rl;
+}
+
 .mirrored {
   transform: scaleX(-1);
 }
