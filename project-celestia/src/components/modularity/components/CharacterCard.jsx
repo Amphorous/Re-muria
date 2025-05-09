@@ -952,7 +952,7 @@ function CharacterCard({item}) {
                     {showDamage &&
                       <div className="flex categoryinfobox items-center ml-[2%] min-w-[408px] w-full bg-gray-950/42 backdrop-blur-md
                        border border-[#B2B2B2]/42  rounded-full">
-                        <p className='afacad-light text-[#b7b5b5]'>{currentDamageObj?.category}</p>
+                        <p className='afacad-light text-[#b7b5b5] w-[90%]'>{currentDamageObj?.category}</p>
                         <div className="bg-white rounded-r-full h-[95%] w-[10%] m-1 flex items-center justify-center text-black">
                           <p className='vertical-text'>120%</p>
                         </div>

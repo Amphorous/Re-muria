@@ -33,6 +33,7 @@ function Header() {
 
     useEffect(()=>{
         let res = null
+        if(remurian.username){
           axios.get(`http://localhost:8080/login/getRemurian/${remurian.username}`)
           .then((response)=>{
             res = response
@@ -47,6 +48,7 @@ function Header() {
             })
           })
           .catch((err)=>{console.log(err)})
+        }
     }, [remurian.username])
 
     useEffect(()=>{
