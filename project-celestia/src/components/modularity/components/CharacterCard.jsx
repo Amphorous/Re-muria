@@ -9,6 +9,7 @@ import loading from '../../../assets/loading.gif'
 import { MdEditSquare } from "react-icons/md";
 import { CiSaveUp1 } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
+import { RiArrowGoBackFill } from "react-icons/ri";
 
 import 'simplebar-react/dist/simplebar.min.css';
 import SimpleBar from 'simplebar-react';
@@ -87,6 +88,7 @@ function CharacterCard({item}) {
 
   useEffect(()=>{
     setShowDamage(false)
+    setBuildEditBool(false)
   }, [item.buildName, item.avatarId])
 
   useEffect(() => {
@@ -872,7 +874,7 @@ function CharacterCard({item}) {
                       </div>
                     </div>
 
-                    {currentIconAsset && 
+                    {(currentIconAsset && !showDamage) && 
                       <div className="flex constellations items-center ml-[2%] min-w-[408px]">
                         {
                           currentIconAsset.consts.map((constString, index)=>(
@@ -919,13 +921,25 @@ function CharacterCard({item}) {
                             </>
                           )}
 
-                          {(currentCardInfo.buildName !== null) && <>
+                          {(buildEditBool)?<>
                             <div 
-                                className={`ml-[2%]  rounded-full p-4 aspect-square bg-red-400`}
-                                onClick={()=>{buildDeleteHandler(buildNameGetter(item.buildName), item.avatarId, webUid)}}
+                                className={`ml-[2%]  rounded-full p-4 aspect-square`}
+                                style={{backgroundColor: `${shades.ligma}`}}
+                                onClick={() => {
+                                  setBuildEditBool(false);
+                                }}
                               >
-                                <MdDelete size={20}/>
-                            </div>
+                                <RiArrowGoBackFill size={20}/>
+                              </div>
+                          </>:<>
+                            {(currentCardInfo.buildName !== null) && <>
+                              <div 
+                                  className={`ml-[2%]  rounded-full p-4 aspect-square bg-red-400`}
+                                  onClick={()=>{buildDeleteHandler(buildNameGetter(item.buildName), item.avatarId, webUid)}}
+                                >
+                                  <MdDelete size={20}/>
+                              </div>
+                            </>}
                           </>}
 
                           {(err !== "") && <p className='afacad-bold bg-amber-800 ml-[2%] p-2 rounded-3xl'>{err}</p>}
@@ -933,6 +947,16 @@ function CharacterCard({item}) {
 
                       </div>
                       }
+
+                    {showDamage &&
+                      <div className="flex categoryinfobox items-center ml-[2%] min-w-[408px] w-full bg-gray-950/42 backdrop-blur-md
+                       border border-[#B2B2B2]/42  rounded-full">
+                        <p className='afacad-light text-[#b7b5b5]'>{currentDamageObj?.category}</p>
+                        <div className="bg-white rounded-r-full h-[95%] w-[10%] m-1 flex items-center justify-center text-black">
+                          <p className='vertical-text'>120%</p>
+                        </div>
+                      </div>
+                    }
 
                   </form>
 
@@ -1207,7 +1231,7 @@ function CharacterCard({item}) {
 
                           </SimpleBar>
                         </div>
-                        <div className=" p- mt-5 ml-5 flex flex-col thisIsArtifactContainer max-h-[93%] w-[55%] w-mac ">
+                        <div className=" p- mt-5 ml-16 flex flex-col thisIsArtifactContainer max-h-[93%] w-[55%] w-macc ">
 
                                 {showArtifacts(currentCardInfo.artifactList, 0)}
                                 {showArtifacts(currentCardInfo.artifactList, 1)}
