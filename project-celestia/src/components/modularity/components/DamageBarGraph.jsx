@@ -102,7 +102,7 @@ function DamageBarGraph({ data }) {
           {/* Tooltip */}
           {tooltip && (
             <div
-              className="absolute p-2 top-20 bg-gray-800 text-white text-sm rounded shadow-md"
+              className="absolute p-2 top-20 bg-gray-800 text-white text-sm rounded shadow-md z-100"
             >
               <div><strong>Name:</strong> {tooltip.name}</div>
               <div><strong>Type:</strong> {tooltip.type}</div>
