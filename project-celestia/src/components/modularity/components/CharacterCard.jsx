@@ -56,6 +56,7 @@ import DamageGraph from './DamageGraph';
 import { fetchContextObj } from '../../../contexts/FetchContext';
 import { canvasContextObj } from '../../../contexts/CanvasContext';
 import DamageBarGraph from './DamageBarGraph';
+import DamageDonutChart from './DamageDonutChart';
 
 
 function CharacterCard({item}) {
@@ -962,10 +963,14 @@ function CharacterCard({item}) {
                   </form>
 
                   {(showDamage)?
-                  <div className='flex damageContainer h-full relative'>
-
-                        <DamageGraph data={currentDamageObj}/>
+                  <div className='flex flex-col damageContainer h-full relative'>
+                        <h2>Rotation:</h2>
                         <DamageBarGraph data={currentDamageObj}/>
+                        <div className='flex h-full'>
+                          <DamageGraph data={currentDamageObj}/>
+                          <DamageDonutChart data={currentDamageObj}/>
+                        </div>
+                        
 
                         <div 
                         onClick={()=>{handleShowDamage()}}
