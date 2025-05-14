@@ -57,6 +57,7 @@ import { fetchContextObj } from '../../../contexts/FetchContext';
 import { canvasContextObj } from '../../../contexts/CanvasContext';
 import DamageBarGraph from './DamageBarGraph';
 import DamageDonutChart from './DamageDonutChart';
+import DamageProfileDiagnosis from './DamageProfileDiagnosis';
 
 
 function CharacterCard({item}) {
@@ -970,6 +971,7 @@ function CharacterCard({item}) {
                           <DamageGraph data={currentDamageObj}/>
                           <DamageDonutChart data={currentDamageObj}/>
                         </div>
+                        <DamageProfileDiagnosis data={currentDamageObj}/>
                         
 
                         <div 
