@@ -1,6 +1,6 @@
 # Re:muria — Genshin Impact
 
-The backend for our first full-stack web application prototype built for **Genshin Impact** players to view detailed user stats, artifacts,character builds, rankings and damage calculations — powered by the [Enka.Network API](https://api.enka.network/#/).
+The frontend for our first full-stack web application prototype built for **Genshin Impact** players to view detailed user stats, artifacts,character builds, rankings and damage calculations — powered by the [Enka.Network API](https://api.enka.network/#/).
 
 > ⚙️ *Finished Prototype, not being updated due to an entirely new version of it in work*
 
