@@ -1,12 +1,89 @@
-# React + Vite
+# Re:muria — Genshin Impact
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The backend for our first full-stack web application prototype built for **Genshin Impact** players to view detailed user stats, artifacts,character builds, rankings and damage calculations — powered by the [Enka.Network API](https://api.enka.network/#/).
 
-Currently, two official plugins are available:
+> ⚙️ *Finished Prototype, not being updated due to an entirely new version of it in work*
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## ✨ Demo Previews
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+<table align="center">
+<tr>
+<td align="center">
+  <img src="./assets/p1-canva.gif" width="100%" alt="Homepage Demo"/>
+  <br/>
+  <sub><b>Homepage & UID Search</b></sub>
+</td>
+</tr>
+<tr>
+<td align="center">
+  <img src="./assets/p2-canva.gif" width="100%" alt="Dashboard View"/>
+  <br/>
+  <sub><b>User Dashboard</b></sub>
+</td>
+</tr>
+<tr>
+<td align="center">
+  <img src="./assets/p3-canva.gif" width="100%" alt="Dashboard View"/>
+  <br/>
+  <sub><b>Character Builds Display</b></sub>
+</td>
+</tr>
+<tr>
+<td align="center">
+  <img src="./assets/p4-canva.gif" width="100%" alt="Dashboard View"/>
+  <br/>
+  <sub><b>Builds card with Card Animations</b></sub>
+</td>
+</tr>
+<tr>
+<td align="center">
+  <img src="./assets/p6-canva.gif" width="100%" alt="Dashboard View"/>
+  <br/>
+  <sub><b>Editing and Saving Builds</b></sub>
+</td>
+</tr>
+<tr>
+<td align="center">
+  <img src="./assets/p7-canva.gif" width="100%" alt="Dashboard View"/>
+  <br/>
+  <sub><b>Builds damage Visualized</b></sub>
+</td>
+</tr>
+<tr>
+<td align="center">
+  <img src="./assets/p5-canva.gif" width="100%" alt="Dashboard View"/>
+  <br/>
+  <sub><b>in-game profile validation page</b></sub>
+</td>
+</tr>
+</table>
+
+---
+
+## 🧩 Tech Stack
+
+| Layer | Technologies Used                               |
+|:------|:------------------------------------------------|
+| **Frontend** | ReactJS, TailwindCSS, Framer Motion             |
+| **Backend** | Java Spring Boot, Swagger UI                    |
+| **Database** | MongoDB                                         |
+| **API Source** | [Enka.Network API](https://api.enka.network/#/) |
+| **Architecture** | MVC (Model-View-Controller)                     |
+
+---
+
+## 🌠 Features (Planned & Implemented)
+
+### ✅ Implemented
+- UID-based player search
+- Dynamic dashboard displaying user stats and artifacts
+- Visualizes Character Damage over rotation (only Select characters)
+- Glassy-style Character build cards
+- Real-time data fetch from Enka API
+- User login and personalized dashboards
+- Character Builds Ranking System segregated via Energy Regeneration splits
+- Optional Card Animations can enabled to give a better design experience with the Character Builds card
+
+
