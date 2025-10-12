@@ -62,7 +62,7 @@ function UserCard(props) {
 
         <div className="z-0 bg-cover bg-center h-full w-full rounded-md" style={{backgroundImage: `url(${cardInfo.nameCardLink})`}}>
             <div className=" bg-gray-800/42 backdrop-blur-xs w-[31.5rem] h-[17rem] rounded-md absolute flex justify-end">
-                <div className="absolute text-white mr-[28.5rem] -rotate-90 mt-10 flex libre-baskerville-regular backdrop-blur-xs rounded-4xl">
+            <div className="absolute text-white mr-[28.5rem] -rotate-90 mt-10 flex libre-baskerville-regular backdrop-blur-xs rounded-4xl">
                     <p>AR:</p>
                     <p>{cardInfo.level}</p>
                 </div>
