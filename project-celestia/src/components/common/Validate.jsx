@@ -12,7 +12,7 @@ function Validate() {
   const [submitTimeout, setSubmitTimeout] = useState();
   const [err, setErr] = useState("");
   const {register, handleSubmit, formState:{errors}} = useForm();
-  const {remurian, setRemurian} = useContext(remurianContextObj);
+  const {remurian, setRemurian} = useContext(remurianContextObj); //login context
   const {isLoaded, isSignedIn, user} = useUser();
 
     useEffect(
